@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluentValidation.AspNetCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -36,6 +37,7 @@ namespace MagnumPhotos.API
                 options.SerializerSettings.ContractResolver =
                 new CamelCasePropertyNamesContractResolver();
             });
+            .AddFluentValidation (options => { options.RegisterValidatorsFromAssemblyContaining<Startup> (); });
 
             services.AddDbContext<MagnumPhotosContext> (options =>
                 options.UseNpgsql (Configuration.GetConnectionString ("MagnumPhotosApi")));
@@ -63,23 +65,43 @@ namespace MagnumPhotos.API
             {
                 app.UseDeveloperExceptionPage();
             }
-
-
-            AutoMapper.Mapper.Initialize(cfg =>
+            else
             {
-                cfg.CreateMap<Entities.Photographer, Models.PhotographerDto>()
+                app.UseExceptionHandler(appBuilder =>
+                {
+                    appBuilder.Run(async context =>
+                    {
+                        var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
+                        if (exceptionHandlerFeature != null)
+                        {
+                            var logger = loggerFactory.CreateLogger("Global exception logger");
+                            logger.LogError(500,
+                                exceptionHandlerFeature.Error,
+                                exceptionHandlerFeature.Error.Message);
+                        }
+
+                        context.Response.StatusCode = 500;
+                        await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
+
+                    });                      
+                });
+            }
+
+            AutoMapper.Mapper.Initialize(options =>
+            {
+                options.CreateMap<Entities.Photographer, Models.PhotographerDto>()
                     .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
                     $"{src.FirstName} {src.LastName}"))
                     .ForMember(dest => dest.Age, opt => opt.MapFrom(src =>
                     src.DateOfBirth.GetCurrentAge()));
 
-                cfg.CreateMap<Entities.Book, Models.BookDto>();
+                options.CreateMap<Entities.Book, Models.BookDto>();
 
-                cfg.CreateMap<Models.PhotographerForCreationDto, Entities.Photographer>();
+                options.CreateMap<Models.PhotographerForCreationDto, Entities.Photographer>();
 
-                cfg.CreateMap<Models.BookForCreationDto, Entities.Book>();
+                options.CreateMap<Models.BookForCreationDto, Entities.Book>();
 
-                cfg.CreateMap<Entities.Book, Models.BookForUpdateDto>();
+                options.CreateMap<Entities.Book, Models.BookForUpdateDto>();
             });
 
             app.UseMvc();

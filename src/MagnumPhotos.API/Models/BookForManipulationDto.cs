@@ -1,6 +1,7 @@
+
+
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,14 +9,17 @@ namespace MagnumPhotos.API.Models
 {
     public abstract class BookForManipulationDto
     {
-        [Required(ErrorMessage = "You should fill out a title.")]
-        [MaxLength(100, ErrorMessage = "The title shouldn't have more than 100 characters.")]
         public string Title { get; set; }
 
-        [MaxLength(500, ErrorMessage = "The description shouldn't have more than 500 characters.")]
         public virtual string Description { get; set; }
 
-        [MaxLength(500, ErrorMessage = "The description shouldn't have more than 500 characters.")]
-        public DateTime string CopyRightDate { get; set; }
+        public DateTime string CopyrightDate { get; set; }
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var validator = new BookForManipulationDto()
+            var result = validator.Validate(this);
+            return result.Errors.Select(item => new ValidationResult(item.ErrorMessage, new[] { item.PropertyName }));
+        }
     }
 }

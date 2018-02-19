@@ -1,0 +1,10 @@
+/home/michael/Projects-DotNet/LibraryApi/src/Library.API/obj/Debug/netcoreapp2.0/LibraryApi.csproj.CoreCompileInputs.cache
+/home/michael/Projects-DotNet/LibraryApi/src/Library.API/obj/Debug/netcoreapp2.0/LibraryApi.AssemblyInfoInputs.cache
+/home/michael/Projects-DotNet/LibraryApi/src/Library.API/obj/Debug/netcoreapp2.0/LibraryApi.AssemblyInfo.cs
+/home/michael/Projects-DotNet/LibraryApi/src/Library.API/bin/Debug/netcoreapp2.0/LibraryApi.deps.json
+/home/michael/Projects-DotNet/LibraryApi/src/Library.API/bin/Debug/netcoreapp2.0/LibraryApi.runtimeconfig.json
+/home/michael/Projects-DotNet/LibraryApi/src/Library.API/bin/Debug/netcoreapp2.0/LibraryApi.runtimeconfig.dev.json
+/home/michael/Projects-DotNet/LibraryApi/src/Library.API/bin/Debug/netcoreapp2.0/LibraryApi.dll
+/home/michael/Projects-DotNet/LibraryApi/src/Library.API/bin/Debug/netcoreapp2.0/LibraryApi.pdb
+/home/michael/Projects-DotNet/LibraryApi/src/Library.API/obj/Debug/netcoreapp2.0/LibraryApi.dll
+/home/michael/Projects-DotNet/LibraryApi/src/Library.API/obj/Debug/netcoreapp2.0/LibraryApi.pdb

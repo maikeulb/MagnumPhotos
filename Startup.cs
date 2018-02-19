@@ -8,8 +8,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Library.API.Services;
+using Library.API.Entities;
+using Library.API.Entities.Interfaces;
+using Library.API.Data.Seed;
+using Library.API.Data.Context;
+using Microsoft.EntityFrameworkCore;
 
-namespace LibraryApi
+namespace Library.API
 {
     public class Startup
     {
@@ -20,14 +26,18 @@ namespace LibraryApi
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.AddDbContext<LibraryContext> (options =>
+                options.UseNpgsql (Configuration.GetConnectionString ("LibraryApi")));
+
+            services.AddScoped<ILibraryRepository, LibraryRepository>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
+            ILoggerFactory loggerFactory, LibraryContext libraryContext)
         {
             if (env.IsDevelopment())
             {

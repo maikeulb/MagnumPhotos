@@ -29,7 +29,9 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpGet(Name = "GetPhotographers")]
-        public IActionResult GetPhotographers(PhotographersResourceParameters photographersResourceParameters)
+        [HttpHead]
+        public IActionResult GetPhotographers(PhotographersResourceParameters photographersResourceParameters,
+            [FromHeader(Name = "Accept")] string mediaType)
         {
             if (!_propertyMappingService.ValidMappingExistsFor<PhotographerDto, Photographer>
                (photographersResourceParameters.OrderBy))
@@ -160,5 +162,13 @@ namespace MagnumPhotos.API.Controllers
 
             return NoContent();
         }
+
+        [HttpOptions]
+        public IActionResult GetAuthorsOptions()
+        {
+            Response.Headers.Add("Allow", "GET,OPTIONS,POST");
+            return Ok();
+        }
+
     }
 }

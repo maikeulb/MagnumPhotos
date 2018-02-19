@@ -1,4 +1,5 @@
 using AutoMapper;
+using MagnumPhotos.API.Services.Interfaces;
 using MagnumPhotos.API.Entities;
 using MagnumPhotos.API.Helpers;
 using MagnumPhotos.API.Models;
@@ -49,11 +50,12 @@ namespace MagnumPhotos.API.Controllers
                 return NotFound();
 
             var bookForPhotographerFromRepo = _magnumPhotosRepository.GetBookForPhotographer(photographerId, id);
+
             if (bookForPhotographerFromRepo == null)
                 return NotFound();
 
             var bookForPhotographer = Mapper.Map<BookDto>(bookForPhotographerFromRepo);
-            return Ok(booksForPhotographer);
+            return Ok(bookForPhotographer);
        }
 
         [HttpPost(Name = "CreateBookForPhotographer")]
@@ -83,7 +85,7 @@ namespace MagnumPhotos.API.Controllers
             var bookToReturn = Mapper.Map<BookDto>(bookEntity);
 
             return CreatedAtRoute("GetBookForPhotographer",
-                new { photographerId = photographerId, id = bookToReturn.Id }, bookToReturn)
+                new { photographerId = photographerId, id = bookToReturn.Id }, bookToReturn);
         }
 
         [HttpDelete("{id}", Name ="DeleteBookForPhotographer")]
@@ -143,8 +145,6 @@ namespace MagnumPhotos.API.Controllers
             }
 
             Mapper.Map(book, bookForPhotographerFromRepo);
-
-            _magnumPhotosRepository.UpdateBookForPhotographer(bookForPhotographerFromRepo);
 
             if (!_magnumPhotosRepository.Save())
                 throw new Exception($"Updating book {id} for photographer {photographerId} failed on save.");
@@ -206,8 +206,6 @@ namespace MagnumPhotos.API.Controllers
                 return new UnprocessableEntityObjectResult(ModelState);
            
             Mapper.Map(bookToPatch, bookForPhotographerFromRepo);
-
-            _magnumPhotosRepository.UpdateBookForPhotographer(bookForPhotographerFromRepo);
 
             if (!_magnumPhotosRepository.Save())
                 throw new Exception($"Patching book {id} for photographer {photographerId} failed on save.");

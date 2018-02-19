@@ -1,4 +1,5 @@
-﻿using MagnumPhotos.API.Entities;
+﻿using MagnumPhotos.API.Services.Interfaces;
+using MagnumPhotos.API.Entities;
 using MagnumPhotos.API.Models;
 using System;
 using System.Collections.Generic;

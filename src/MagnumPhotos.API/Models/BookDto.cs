@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MagnumPhotos.API.Models
 {
-    public class BookDto : LinkedResourceBaseDto
+    public class BookDto
     {
         public Guid Id { get; set; }
         public Guid PhotographerId { get; set; }

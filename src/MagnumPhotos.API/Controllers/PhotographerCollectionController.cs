@@ -1,7 +1,8 @@
 using AutoMapper;
+using MagnumPhotos.API.Services.Interfaces;
+using MagnumPhotos.API.Models;
 using MagnumPhotos.API.Entities;
 using MagnumPhotos.API.Helpers;
-using MagnumPhotos.API.Models;
 using MagnumPhotos.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;

@@ -41,6 +41,7 @@ namespace MagnumPhotos.API.Data.Seed
             {
                 new Photographer()
                 {
+                    Id = new Guid("25320c5e-f58a-4b1f-b63a-8ee07a840bdf"),
                     FirstName = "Vincent", 
                     LastName = "John", 
                     DateOfBirth = new DateTimeOffset(new DateTime(1952, 3, 11)), 
@@ -49,6 +50,7 @@ namespace MagnumPhotos.API.Data.Seed
                 },
                 new Photographer()
                 {
+                    Id = new Guid("76053df4-6687-4353-8937-b45556748abe"),
                     FirstName = "Smoh", 
                     LastName = "Rick", 
                     DateOfBirth = new DateTimeOffset(new DateTime(1943, 4, 21)), 
@@ -67,21 +69,21 @@ namespace MagnumPhotos.API.Data.Seed
                     Title = "Vincent", 
                     Description  = "Not that fun", 
                     CopyrightDate = new DateTime(1943, 4, 21), 
-                    PhotographerId = 1
+                    PhotographerId = new Guid("25320c5e-f58a-4b1f-b63a-8ee07a840bdf"),
                 },
                 new Book()
                 {
                     Title = "FarField", 
                     Description  = "Romantic", 
                     CopyrightDate = new DateTime(1943, 4, 21),
-                    PhotographerId = 1
+                    PhotographerId = new Guid("76053df4-6687-4353-8937-b45556748abe"),
                 },
                 new Book()
                 {
                     Title = "Vincent", 
                     Description  = "John", 
-                    CopyrightDate = new DateTimeOffset(new DateTime(1943, 4, 21)), 
-                    PhotographerId = 2
+                    CopyrightDate = new DateTime(1943, 4, 21),
+                    PhotographerId = new Guid("76053df4-6687-4353-8937-b45556748abe"),
                 },
             };
         }

@@ -2,6 +2,12 @@
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,12 +56,12 @@ namespace MagnumPhotos.API
                     .OfType<JsonOutputFormatter>().FirstOrDefault();
                 if (jsonOutputFormatter != null)
                     jsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.marvin.hateoas+json");
-            }
+            })
             .AddJsonOptions(options =>
             {
                 options.SerializerSettings.ContractResolver =
                 new CamelCasePropertyNamesContractResolver();
-            });
+            })
             .AddFluentValidation (options => { options.RegisterValidatorsFromAssemblyContaining<Startup> (); });
 
             services.AddDbContext<MagnumPhotosContext> (options =>
@@ -74,7 +80,7 @@ namespace MagnumPhotos.API
 
             services.AddTransient<IPropertyMappingService, PropertyMappingService>();
 
-            services.AddScoped<IUrlHelper, UrlHelper>(); */
+            services.AddScoped<IUrlHelper, UrlHelper>();
 
             services.AddHttpCacheHeaders(
                 (expirationModelOptions)

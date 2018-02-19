@@ -1,3 +1,4 @@
+using MagnumPhotos.API.Services.Interfaces;
 using MagnumPhotos.API.Models;
 using MagnumPhotos.API.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -74,7 +75,6 @@ namespace MagnumPhotos.API.Controllers
                     return _urlHelper.Link("GetPhotographers",
                       new
                       {
-                          fields = photographersResourceParameters.Fields,
                           orderBy = photographersResourceParameters.OrderBy,
                           searchQuery = photographersResourceParameters.SearchQuery,
                           genre = photographersResourceParameters.Genre,
@@ -85,7 +85,6 @@ namespace MagnumPhotos.API.Controllers
                     return _urlHelper.Link("GetPhotographers",
                       new
                       {
-                          fields = photographersResourceParameters.Fields,
                           orderBy = photographersResourceParameters.OrderBy,
                           searchQuery = photographersResourceParameters.SearchQuery,
                           genre = photographersResourceParameters.Genre,
@@ -97,7 +96,6 @@ namespace MagnumPhotos.API.Controllers
                     return _urlHelper.Link("GetPhotographers",
                     new
                     {
-                        fields = photographersResourceParameters.Fields,
                         orderBy = photographersResourceParameters.OrderBy,
                         searchQuery = photographersResourceParameters.SearchQuery,
                         genre = photographersResourceParameters.Genre,
@@ -108,7 +106,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpGet("{id}", Name ="GetPhotographer")]
-        public IActionResult GetPhotographer(Guid id, [FromQuery] string fields)
+        public IActionResult GetPhotographer(Guid id)
         {
             var photographerFromRepo = _magnumPhotosRepository.GetPhotographer(id);
 
@@ -116,7 +114,7 @@ namespace MagnumPhotos.API.Controllers
                 return NotFound();
 
             var photographer = Mapper.Map<PhotographerDto>(photographerFromRepo);
-            return Ok(photographer));
+            return Ok(photographer);
         }
 
         [HttpPost]

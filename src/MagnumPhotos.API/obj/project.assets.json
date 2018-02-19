@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v2.0": {
+      "AspNetCoreRateLimit/2.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Mvc": "1.0.3",
+          "NETStandard.Library": "1.6.0"
+        },
+        "compile": {
+          "lib/netstandard1.6/AspNetCoreRateLimit.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.6/AspNetCoreRateLimit.dll": {}
+        }
+      },
       "AutoMapper/6.2.1": {
         "type": "package",
         "dependencies": {
@@ -36,6 +49,28 @@
         },
         "runtime": {
           "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll": {}
+        }
+      },
+      "FluentValidation/7.4.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/FluentValidation.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/FluentValidation.dll": {}
+        }
+      },
+      "FluentValidation.AspNetCore/7.4.0": {
+        "type": "package",
+        "dependencies": {
+          "FluentValidation": "7.4.0",
+          "Microsoft.AspNetCore.Mvc": "2.0.2"
+        },
+        "compile": {
+          "lib/netstandard2.0/FluentValidation.AspNetCore.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/FluentValidation.AspNetCore.dll": {}
         }
       },
       "Libuv/1.10.0": {
@@ -76,6 +111,23 @@
             "assetType": "native",
             "rid": "win-x86"
           }
+        }
+      },
+      "Marvin.Cache.Headers/1.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Abstractions": "1.0.2",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.2",
+          "Microsoft.Extensions.Logging.Abstractions": "1.0.2",
+          "Microsoft.Extensions.Options": "1.0.2",
+          "Microsoft.Net.Http.Headers": "1.0.2",
+          "NETStandard.Library": "1.6.0"
+        },
+        "compile": {
+          "lib/netstandard1.6/Marvin.Cache.Headers.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.6/Marvin.Cache.Headers.dll": {}
         }
       },
       "Microsoft.ApplicationInsights/2.4.0": {
@@ -3451,6 +3503,33 @@
           "ref/netstandard1.0/System.Diagnostics.Tools.dll": {}
         }
       },
+      "System.Diagnostics.TraceSource/4.3.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "1.1.0",
+          "System.Collections": "4.3.0",
+          "System.Diagnostics.Debug": "4.3.0",
+          "System.Globalization": "4.3.0",
+          "System.Resources.ResourceManager": "4.3.0",
+          "System.Runtime": "4.3.0",
+          "System.Runtime.Extensions": "4.3.0",
+          "System.Threading": "4.3.0",
+          "runtime.native.System": "4.3.0"
+        },
+        "compile": {
+          "ref/netstandard1.3/System.Diagnostics.TraceSource.dll": {}
+        },
+        "runtimeTargets": {
+          "runtimes/unix/lib/netstandard1.3/System.Diagnostics.TraceSource.dll": {
+            "assetType": "runtime",
+            "rid": "unix"
+          },
+          "runtimes/win/lib/netstandard1.3/System.Diagnostics.TraceSource.dll": {
+            "assetType": "runtime",
+            "rid": "win"
+          }
+        }
+      },
       "System.Diagnostics.Tracing/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -3646,6 +3725,24 @@
         },
         "runtime": {
           "lib/netstandard1.6/System.Linq.dll": {}
+        }
+      },
+      "System.Linq.Dynamic.Core/1.0.8.2": {
+        "type": "package",
+        "dependencies": {
+          "System.Collections.Concurrent": "4.3.0",
+          "System.ComponentModel.TypeConverter": "4.3.0",
+          "System.Diagnostics.TraceSource": "4.3.0",
+          "System.Dynamic.Runtime": "4.3.0",
+          "System.Linq.Queryable": "4.3.0",
+          "System.Reflection.Emit": "4.3.0",
+          "System.Reflection.TypeExtensions": "4.3.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/System.Linq.Dynamic.Core.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Linq.Dynamic.Core.dll": {}
         }
       },
       "System.Linq.Expressions/4.3.0": {
@@ -4814,6 +4911,17 @@
     }
   },
   "libraries": {
+    "AspNetCoreRateLimit/2.1.0": {
+      "sha512": "emVk7+fPhweDWG7aIinm3ymJ5AtctGt8EqJohmNX/vS/NxOp0JH/fEDUuI8BouTZgH0dSDuyPARN2z65HpZIJQ==",
+      "type": "package",
+      "path": "aspnetcoreratelimit/2.1.0",
+      "files": [
+        "aspnetcoreratelimit.2.1.0.nupkg.sha512",
+        "aspnetcoreratelimit.nuspec",
+        "lib/net46/AspNetCoreRateLimit.dll",
+        "lib/netstandard1.6/AspNetCoreRateLimit.dll"
+      ]
+    },
     "AutoMapper/6.2.1": {
       "sha512": "ZD9he/2wsNQbfnZJMc7Ijvz0hf2Lc6R8Tk97k8Q741flowTHd/YPxG8d5P0BVOJAPLVXjjX6IZ8l0u0A2l+K2g==",
       "type": "package",
@@ -4841,6 +4949,32 @@
         "lib/netstandard2.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll"
       ]
     },
+    "FluentValidation/7.4.0": {
+      "sha512": "0lvGuTepyt4dniOEuQkoRqzvOtRIpu723k32peSMQutk/09VcBzNUCbmTs/2fKnwrPVx6M/SGKZYN32jH4Fw4A==",
+      "type": "package",
+      "path": "fluentvalidation/7.4.0",
+      "files": [
+        "fluentvalidation.7.4.0.nupkg.sha512",
+        "fluentvalidation.nuspec",
+        "lib/net45/FluentValidation.dll",
+        "lib/net45/FluentValidation.xml",
+        "lib/netstandard1.0/FluentValidation.dll",
+        "lib/netstandard1.0/FluentValidation.xml",
+        "lib/netstandard2.0/FluentValidation.dll",
+        "lib/netstandard2.0/FluentValidation.xml"
+      ]
+    },
+    "FluentValidation.AspNetCore/7.4.0": {
+      "sha512": "w6NFoQcHmyCHUQYLZlBa4cTx2A98aLKmZezLuTXQ+YHrWrLDzycB9LOP/fgdQ9wg0b6iNABwG/eTmiXVidlJhg==",
+      "type": "package",
+      "path": "fluentvalidation.aspnetcore/7.4.0",
+      "files": [
+        "fluentvalidation.aspnetcore.7.4.0.nupkg.sha512",
+        "fluentvalidation.aspnetcore.nuspec",
+        "lib/netstandard2.0/FluentValidation.AspNetCore.dll",
+        "lib/netstandard2.0/FluentValidation.AspNetCore.xml"
+      ]
+    },
     "Libuv/1.10.0": {
       "sha512": "GsCf4q+eyaI49rCPlgYxdxa1SQCysXFFdSJWdstrwxytg4+VPYLYrXD4AT2rjHVJ+UF7SSWX9CapWEYaU4ejVQ==",
       "type": "package",
@@ -4857,6 +4991,16 @@
         "runtimes/win-arm/native/libuv.dll",
         "runtimes/win-x64/native/libuv.dll",
         "runtimes/win-x86/native/libuv.dll"
+      ]
+    },
+    "Marvin.Cache.Headers/1.1.0": {
+      "sha512": "xUVGPP9vmFCN3ZrZ327+uY9M2NEGiuQEHKvb6N0bgPwTl/ODMymhleIsK+bIeRmMn37VKy/vXctTNVks/Jg0bw==",
+      "type": "package",
+      "path": "marvin.cache.headers/1.1.0",
+      "files": [
+        "lib/netstandard1.6/Marvin.Cache.Headers.dll",
+        "marvin.cache.headers.1.1.0.nupkg.sha512",
+        "marvin.cache.headers.nuspec"
       ]
     },
     "Microsoft.ApplicationInsights/2.4.0": {
@@ -9010,6 +9154,45 @@
         "system.diagnostics.tools.nuspec"
       ]
     },
+    "System.Diagnostics.TraceSource/4.3.0": {
+      "sha512": "VnYp1NxGx8Ww731y2LJ1vpfb/DKVNKEZ8Jsh5SgQTZREL/YpWRArgh9pI8CDLmgHspZmLL697CaLvH85qQpRiw==",
+      "type": "package",
+      "path": "system.diagnostics.tracesource/4.3.0",
+      "files": [
+        "ThirdPartyNotices.txt",
+        "dotnet_library_license.txt",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net46/System.Diagnostics.TraceSource.dll",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/net46/System.Diagnostics.TraceSource.dll",
+        "ref/netstandard1.3/System.Diagnostics.TraceSource.dll",
+        "ref/netstandard1.3/System.Diagnostics.TraceSource.xml",
+        "ref/netstandard1.3/de/System.Diagnostics.TraceSource.xml",
+        "ref/netstandard1.3/es/System.Diagnostics.TraceSource.xml",
+        "ref/netstandard1.3/fr/System.Diagnostics.TraceSource.xml",
+        "ref/netstandard1.3/it/System.Diagnostics.TraceSource.xml",
+        "ref/netstandard1.3/ja/System.Diagnostics.TraceSource.xml",
+        "ref/netstandard1.3/ko/System.Diagnostics.TraceSource.xml",
+        "ref/netstandard1.3/ru/System.Diagnostics.TraceSource.xml",
+        "ref/netstandard1.3/zh-hans/System.Diagnostics.TraceSource.xml",
+        "ref/netstandard1.3/zh-hant/System.Diagnostics.TraceSource.xml",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "ref/xamarintvos10/_._",
+        "ref/xamarinwatchos10/_._",
+        "runtimes/unix/lib/netstandard1.3/System.Diagnostics.TraceSource.dll",
+        "runtimes/win/lib/net46/System.Diagnostics.TraceSource.dll",
+        "runtimes/win/lib/netstandard1.3/System.Diagnostics.TraceSource.dll",
+        "system.diagnostics.tracesource.4.3.0.nupkg.sha512",
+        "system.diagnostics.tracesource.nuspec"
+      ]
+    },
     "System.Diagnostics.Tracing/4.3.0": {
       "sha512": "bYcpVS2rlQhLeW6KT6+CqI56wojNdJ1Hpe3L7m1C15CWMFE+JiaLR2tn0b1/3HftvUHXP6dRNTFdEG/1pqjK7g==",
       "type": "package",
@@ -9629,6 +9812,94 @@
         "ref/xamarinwatchos10/_._",
         "system.linq.4.3.0.nupkg.sha512",
         "system.linq.nuspec"
+      ]
+    },
+    "System.Linq.Dynamic.Core/1.0.8.2": {
+      "sha512": "qbG0eA4az/dTCe2+8GDIiQi9SiOgmflw5Lp/idaTbv8j7W1nwMfLMqfRc28HSToqOSQPdRivPXvuUoY8zk1ljw==",
+      "type": "package",
+      "path": "system.linq.dynamic.core/1.0.8.2",
+      "files": [
+        "lib/net35/System.Linq.Dynamic.Core.dll",
+        "lib/net35/System.Linq.Dynamic.Core.pdb",
+        "lib/net35/System.Linq.Dynamic.Core.xml",
+        "lib/net40/System.Linq.Dynamic.Core.dll",
+        "lib/net40/System.Linq.Dynamic.Core.pdb",
+        "lib/net40/System.Linq.Dynamic.Core.xml",
+        "lib/net45/System.Linq.Dynamic.Core.dll",
+        "lib/net45/System.Linq.Dynamic.Core.pdb",
+        "lib/net45/System.Linq.Dynamic.Core.xml",
+        "lib/net46/System.Linq.Dynamic.Core.dll",
+        "lib/net46/System.Linq.Dynamic.Core.pdb",
+        "lib/net46/System.Linq.Dynamic.Core.xml",
+        "lib/netstandard1.3/System.Linq.Dynamic.Core.dll",
+        "lib/netstandard1.3/System.Linq.Dynamic.Core.pdb",
+        "lib/netstandard1.3/System.Linq.Dynamic.Core.xml",
+        "lib/netstandard2.0/System.Linq.Dynamic.Core.dll",
+        "lib/netstandard2.0/System.Linq.Dynamic.Core.pdb",
+        "lib/netstandard2.0/System.Linq.Dynamic.Core.xml",
+        "lib/uap10.0/System.Linq.Dynamic.Core.dll",
+        "lib/uap10.0/System.Linq.Dynamic.Core.pdb",
+        "lib/uap10.0/System.Linq.Dynamic.Core.pri",
+        "lib/uap10.0/System.Linq.Dynamic.Core.xml",
+        "src/System.Linq.Dynamic.Core/AssemblyBuilderFactory.cs",
+        "src/System.Linq.Dynamic.Core/Compatibility/CustomIntrospectionExtensions.cs",
+        "src/System.Linq.Dynamic.Core/Compatibility/CustomTypeBuilderExtensions.cs",
+        "src/System.Linq.Dynamic.Core/Compatibility/CustomTypeConverterExtensions.cs",
+        "src/System.Linq.Dynamic.Core/CustomTypeProviders/AbstractDynamicLinqCustomTypeProvider.cs",
+        "src/System.Linq.Dynamic.Core/CustomTypeProviders/DefaultDynamicLinqCustomTypeProvider.cs",
+        "src/System.Linq.Dynamic.Core/CustomTypeProviders/DynamicLinqTypeAttribute.cs",
+        "src/System.Linq.Dynamic.Core/CustomTypeProviders/IDynamicLinkTypeProvider.cs",
+        "src/System.Linq.Dynamic.Core/DefaultAssemblyHelper.cs",
+        "src/System.Linq.Dynamic.Core/DynamicClass.cs",
+        "src/System.Linq.Dynamic.Core/DynamicClassFactory.cs",
+        "src/System.Linq.Dynamic.Core/DynamicEnumerableAsyncExtensions.cs",
+        "src/System.Linq.Dynamic.Core/DynamicEnumerableExtensions.cs",
+        "src/System.Linq.Dynamic.Core/DynamicExpressionArgument.cs",
+        "src/System.Linq.Dynamic.Core/DynamicExpressionParser.cs",
+        "src/System.Linq.Dynamic.Core/DynamicOrdering.cs",
+        "src/System.Linq.Dynamic.Core/DynamicProperty.cs",
+        "src/System.Linq.Dynamic.Core/DynamicQueryableExtensions.cs",
+        "src/System.Linq.Dynamic.Core/Exceptions/ParseException.cs",
+        "src/System.Linq.Dynamic.Core/ExtensibilityPoint.cs",
+        "src/System.Linq.Dynamic.Core/Extensions/ExpandObjectExtensions.cs",
+        "src/System.Linq.Dynamic.Core/Extensions/LinqProviderExtensions.cs",
+        "src/System.Linq.Dynamic.Core/GroupResult.cs",
+        "src/System.Linq.Dynamic.Core/IAssemblyHelper.cs",
+        "src/System.Linq.Dynamic.Core/PagedResult.cs",
+        "src/System.Linq.Dynamic.Core/Parser/ConstantExpressionHelper.cs",
+        "src/System.Linq.Dynamic.Core/Parser/Constants.cs",
+        "src/System.Linq.Dynamic.Core/Parser/ExpressionHelper.cs",
+        "src/System.Linq.Dynamic.Core/Parser/ExpressionParser.cs",
+        "src/System.Linq.Dynamic.Core/Parser/ExpressionPromoter.cs",
+        "src/System.Linq.Dynamic.Core/Parser/KeywordsHelper.cs",
+        "src/System.Linq.Dynamic.Core/Parser/PredefinedTypesHelper.cs",
+        "src/System.Linq.Dynamic.Core/Parser/SupportedMethods/CompareConversionType.cs",
+        "src/System.Linq.Dynamic.Core/Parser/SupportedMethods/IEnumerableSignatures.cs",
+        "src/System.Linq.Dynamic.Core/Parser/SupportedMethods/IQueryableSignatures.cs",
+        "src/System.Linq.Dynamic.Core/Parser/SupportedMethods/MethodData.cs",
+        "src/System.Linq.Dynamic.Core/Parser/SupportedMethods/MethodFinder.cs",
+        "src/System.Linq.Dynamic.Core/Parser/SupportedOperands/IAddSignatures.cs",
+        "src/System.Linq.Dynamic.Core/Parser/SupportedOperands/IArithmeticSignatures.cs",
+        "src/System.Linq.Dynamic.Core/Parser/SupportedOperands/IEqualitySignatures.cs",
+        "src/System.Linq.Dynamic.Core/Parser/SupportedOperands/ILogicalSignatures.cs",
+        "src/System.Linq.Dynamic.Core/Parser/SupportedOperands/INegationSignatures.cs",
+        "src/System.Linq.Dynamic.Core/Parser/SupportedOperands/INotSignatures.cs",
+        "src/System.Linq.Dynamic.Core/Parser/SupportedOperands/IRelationalSignatures.cs",
+        "src/System.Linq.Dynamic.Core/Parser/SupportedOperands/IShiftSignatures.cs",
+        "src/System.Linq.Dynamic.Core/Parser/SupportedOperands/ISubtractSignatures.cs",
+        "src/System.Linq.Dynamic.Core/Parser/TypeHelper.cs",
+        "src/System.Linq.Dynamic.Core/ParsingConfig.cs",
+        "src/System.Linq.Dynamic.Core/Properties/AssemblyInfo.cs",
+        "src/System.Linq.Dynamic.Core/Res.cs",
+        "src/System.Linq.Dynamic.Core/System.Linq.Dynamic.Core.csproj",
+        "src/System.Linq.Dynamic.Core/Tokenizer/TextParser.cs",
+        "src/System.Linq.Dynamic.Core/Tokenizer/Token.cs",
+        "src/System.Linq.Dynamic.Core/Tokenizer/TokenId.cs",
+        "src/System.Linq.Dynamic.Core/TypeConverterFactory.cs",
+        "src/System.Linq.Dynamic.Core/Validation/Check.cs",
+        "src/System.Linq.Dynamic.Core/Validation/CoreStrings.cs",
+        "system.linq.dynamic.core.1.0.8.2.nupkg.sha512",
+        "system.linq.dynamic.core.nuspec"
       ]
     },
     "System.Linq.Expressions/4.3.0": {
@@ -12648,11 +12919,16 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
+      "AspNetCoreRateLimit >= 2.1.0",
       "AutoMapper >= 6.2.1",
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 3.2.0",
+      "FluentValidation >= 7.4.0",
+      "FluentValidation.AspNetCore >= 7.4.0",
+      "Marvin.Cache.Headers >= 1.1.0",
       "Microsoft.AspNetCore.All >= 2.0.5",
       "Microsoft.NETCore.App >= 2.0.0",
-      "Npgsql.EntityFrameworkCore.PostgreSQL >= 2.0.0"
+      "Npgsql.EntityFrameworkCore.PostgreSQL >= 2.0.0",
+      "System.Linq.Dynamic.Core >= 1.0.8.2"
     ]
   },
   "packageFolders": {
@@ -12662,11 +12938,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/michael/Projects-DotNet/LibraryApi/src/Library.API/LibraryApi.csproj",
-      "projectName": "LibraryApi",
-      "projectPath": "/home/michael/Projects-DotNet/LibraryApi/src/Library.API/LibraryApi.csproj",
+      "projectUniqueName": "/home/michael/Projects-DotNet/MagnumPhotos/src/MagnumPhotos.API/MagnumPhotos.csproj",
+      "projectName": "MagnumPhotos",
+      "projectPath": "/home/michael/Projects-DotNet/MagnumPhotos/src/MagnumPhotos.API/MagnumPhotos.csproj",
       "packagesPath": "/home/michael/.nuget/packages/",
-      "outputPath": "/home/michael/Projects-DotNet/LibraryApi/src/Library.API/obj/",
+      "outputPath": "/home/michael/Projects-DotNet/MagnumPhotos/src/MagnumPhotos.API/obj/",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "/usr/share/dotnet/sdk/NuGetFallbackFolder"
@@ -12694,6 +12970,10 @@
     "frameworks": {
       "netcoreapp2.0": {
         "dependencies": {
+          "AspNetCoreRateLimit": {
+            "target": "Package",
+            "version": "[2.1.0, )"
+          },
           "AutoMapper": {
             "target": "Package",
             "version": "[6.2.1, )"
@@ -12701,6 +12981,18 @@
           "AutoMapper.Extensions.Microsoft.DependencyInjection": {
             "target": "Package",
             "version": "[3.2.0, )"
+          },
+          "FluentValidation": {
+            "target": "Package",
+            "version": "[7.4.0, )"
+          },
+          "FluentValidation.AspNetCore": {
+            "target": "Package",
+            "version": "[7.4.0, )"
+          },
+          "Marvin.Cache.Headers": {
+            "target": "Package",
+            "version": "[1.1.0, )"
           },
           "Microsoft.AspNetCore.All": {
             "target": "Package",
@@ -12714,6 +13006,10 @@
           "Npgsql.EntityFrameworkCore.PostgreSQL": {
             "target": "Package",
             "version": "[2.0.0, )"
+          },
+          "System.Linq.Dynamic.Core": {
+            "target": "Package",
+            "version": "[1.0.8.2, )"
           }
         },
         "imports": [

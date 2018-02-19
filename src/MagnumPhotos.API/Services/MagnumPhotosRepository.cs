@@ -1,6 +1,9 @@
 using MagnumPhotos.API.Services.Interfaces;
+using MagnumPhotos.API.Services;
 using MagnumPhotos.API.Entities;
+using MagnumPhotos.API.Models;
 using MagnumPhotos.API.Data.Context;
+using MagnumPhotos.API.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,42 +13,13 @@ namespace MagnumPhotos.API.Services
     public class MagnumPhotosRepository : IMagnumPhotosRepository
     {
         private MagnumPhotosContext _context;
+        private IPropertyMappingService _propertyMappingService;
 
-        public MagnumPhotosRepository(MagnumPhotosContext context)
+        public MagnumPhotosRepository(MagnumPhotosContext context,
+            IPropertyMappingService propertyMappingService)
         {
             _context = context;
-        }
-
-        public void AddPhotographer(Photographer photographer)
-        {
-            _context.Photographers.Add(photographer);
-        }
-
-        public void AddBookForPhotographer(int photographerId, Book book)
-        {
-            var photographer = GetPhotographer(photographerId);
-            if (photographer != null)
-                photographer.Books.Add(book);
-        }
-
-        public bool PhotographerExists(int photographerId)
-        {
-            return _context.Photographers.Any(a => a.Id == photographerId);
-        }
-
-        public void DeletePhotographer(Photographer photographer)
-        {
-            _context.Photographers.Remove(photographer);
-        }
-
-        public void DeleteBook(Book book)
-        {
-            _context.Books.Remove(book);
-        }
-
-        public Photographer GetPhotographer(int photographerId)
-        {
-            return _context.Photographers.FirstOrDefault(a => a.Id == photographerId);
+            _propertyMappingService = propertyMappingService;
         }
 
         public PagedList<Photographer> GetPhotographers(
@@ -79,12 +53,12 @@ namespace MagnumPhotos.API.Services
                 photographersResourceParameters.PageSize);               
         }
 
-        public IEnumerable<Photographer> GetPhotographers()
+        public Photographer GetPhotographer(Guid photographerId)
         {
-            return _context.Photographers.OrderBy(a => a.FirstName).ThenBy(a => a.LastName);
+            return _context.Photographers.FirstOrDefault(a => a.Id == photographerId);
         }
 
-        public IEnumerable<Photographer> GetPhotographers(IEnumerable<int> photographerIds)
+        public IEnumerable<Photographer> GetPhotographers(IEnumerable<Guid> photographerIds)
         {
             return _context.Photographers.Where(a => photographerIds.Contains(a.Id))
                 .OrderBy(a => a.FirstName)
@@ -92,16 +66,58 @@ namespace MagnumPhotos.API.Services
                 .ToList();
         }
 
-        public Book GetBookForPhotographer(int photographerId, int bookId)
+        public Book GetBookForPhotographer(Guid photographerId, Guid bookId)
         {
             return _context.Books
               .Where(b => b.PhotographerId == photographerId && b.Id == bookId).FirstOrDefault();
         }
 
-        public IEnumerable<Book> GetBooksForPhotographer(int photographerId)
+        public IEnumerable<Book> GetBooksForPhotographer(Guid photographerId)
         {
             return _context.Books
                         .Where(b => b.PhotographerId == photographerId).OrderBy(b => b.Title).ToList();
+        }
+
+        public void AddPhotographer(Photographer photographer)
+        {
+            photographer.Id = Guid.NewGuid();
+            _context.Photographers.Add(photographer);
+
+            if (photographer.Books.Any())
+            {
+                foreach (var book in photographer.Books)
+                {
+                    book.Id = Guid.NewGuid();
+                }
+            }
+        }
+
+        public void AddBookForPhotographer(Guid photographerId, Book book)
+        {
+            var photographer = GetPhotographer(photographerId);
+            if (photographer != null)
+            {
+                if (book.Id == Guid.Empty)
+                {
+                    book.Id = Guid.NewGuid();
+                }
+                photographer.Books.Add(book);
+            }
+        }
+
+        public bool PhotographerExists(Guid photographerId)
+        {
+            return _context.Photographers.Any(a => a.Id == photographerId);
+        }
+
+        public void DeletePhotographer(Photographer photographer)
+        {
+            _context.Photographers.Remove(photographer);
+        }
+
+        public void DeleteBook(Book book)
+        {
+            _context.Books.Remove(book);
         }
 
         public bool Save()

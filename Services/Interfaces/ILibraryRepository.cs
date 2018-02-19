@@ -3,7 +3,7 @@ using Library.API.Helpers;
 using System;
 using System.Collections.Generic;
 
-namespace Library.API.Services
+namespace Library.API.Services.Interfaces
 {
     public interface ILibraryRepository
     {

@@ -33,6 +33,8 @@ namespace Library.API
             services.AddDbContext<LibraryContext> (options =>
                 options.UseNpgsql (Configuration.GetConnectionString ("LibraryApi")));
 
+            services.AddTransient<ITypeHelperService, TypeHelperService>();
+
             services.AddScoped<ILibraryRepository, LibraryRepository>();
         }
 

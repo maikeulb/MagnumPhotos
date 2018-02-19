@@ -44,6 +44,7 @@ namespace Library.API.Data.Seed
                     FirstName = "Vincent", 
                     LastName = "John", 
                     DateOfBirth = new DateTimeOffset(new DateTime(1952, 3, 11)), 
+                    DateOfDeath = new DateTimeOffset(new DateTime(2000, 4, 21)), 
                     Genre = "Fiction"
                 },
                 new Author()
@@ -51,6 +52,7 @@ namespace Library.API.Data.Seed
                     FirstName = "Smoh", 
                     LastName = "Rick", 
                     DateOfBirth = new DateTimeOffset(new DateTime(1943, 4, 21)), 
+                    DateOfDeath= new DateTimeOffset(new DateTime(2000, 4, 21)), 
                     Genre = "NonFiction"
                 },
             };

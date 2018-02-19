@@ -11,9 +11,10 @@ using System;
 namespace LibraryApi.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    partial class LibraryContextModelSnapshot : ModelSnapshot
+    [Migration("20180219061538_AddDateOfDeath")]
+    partial class AddDateOfDeath
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -25,9 +25,7 @@ namespace Library.API.Services
         {
             var author = GetAuthor(authorId);
             if (author != null)
-            {
                 author.Books.Add(book);
-            }
         }
 
         public bool AuthorExists(int authorId)
@@ -50,6 +48,41 @@ namespace Library.API.Services
             return _context.Authors.FirstOrDefault(a => a.Id == authorId);
         }
 
+        /* public PagedList<Author> GetAuthors( */
+        /*     AuthorsResourceParameters authorsResourceParameters) */
+        /* { */
+        /*     var collectionBeforePaging = _context.Authors */
+        /*         .OrderBy(a => a.FirstName) */
+        /*         .ThenBy(a => a.LastName).AsQueryable(); */
+
+        /*     var collectionBeforePaging = */
+        /*         _context.Authors.ApplySort(authorsResourceParameters.OrderBy, */
+        /*         _propertyMappingService.GetPropertyMapping<AuthorDto, Author>()); */
+
+        /*     if (!string.IsNullOrEmpty(authorsResourceParameters.Genre)) */
+        /*     { */
+        /*         var genreForWhereClause = authorsResourceParameters.Genre */
+        /*             .Trim().ToLowerInvariant(); */
+        /*         collectionBeforePaging = collectionBeforePaging */
+        /*             .Where(a => a.Genre.ToLowerInvariant() == genreForWhereClause); */
+        /*     } */
+
+        /*     if (!string.IsNullOrEmpty(authorsResourceParameters.SearchQuery)) */
+        /*     { */
+        /*         var searchQueryForWhereClause = authorsResourceParameters.SearchQuery */
+        /*             .Trim().ToLowerInvariant(); */
+
+        /*         collectionBeforePaging = collectionBeforePaging */
+        /*             .Where(a => a.Genre.ToLowerInvariant().Contains(searchQueryForWhereClause) */
+        /*             || a.FirstName.ToLowerInvariant().Contains(searchQueryForWhereClause) */
+        /*             || a.LastName.ToLowerInvariant().Contains(searchQueryForWhereClause)); */
+        /*     } */
+
+        /*     return PagedList<Author>.Create(collectionBeforePaging, */
+        /*         authorsResourceParameters.PageNumber, */
+        /*         authorsResourceParameters.PageSize); */               
+        /* } */
+
         public IEnumerable<Author> GetAuthors()
         {
             return _context.Authors.OrderBy(a => a.FirstName).ThenBy(a => a.LastName);
@@ -65,7 +98,7 @@ namespace Library.API.Services
 
         public void UpdateAuthor(Author author)
         {
-            // no code in this implementation
+        
         }
 
         public Book GetBookForAuthor(int authorId, int bookId)
@@ -82,7 +115,7 @@ namespace Library.API.Services
 
         public void UpdateBookForAuthor(Book book)
         {
-            // no code in this implementation
+
         }
 
         public bool Save()

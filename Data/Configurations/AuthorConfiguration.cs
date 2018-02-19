@@ -25,6 +25,8 @@ namespace Library.API.Data.Configurations
 
             builder.Property(a => a.DateOfBirth)
                 .IsRequired(true);
+
+            builder.Property(a => a.DateOfDeath);
         }
     }
 }

@@ -51,14 +51,12 @@ namespace MagnumPhotos.API.Controllers
                 photographerCollectionToReturn);
         }
 
-
         [HttpGet("({ids})", Name="GetPhotographerCollection")]
         public IActionResult GetPhotographerCollection(
-            [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<int> ids)
+            [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
         {           
             if (ids == null)
                 return BadRequest();
-
 
             var photographerEntities = _magnumPhotosRepository.GetPhotographers(ids);
 

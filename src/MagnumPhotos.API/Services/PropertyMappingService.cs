@@ -1,5 +1,5 @@
-﻿using Library.API.Entities;
-using Library.API.Models;
+﻿using MagnumPhotos.API.Entities;
+using MagnumPhotos.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +9,7 @@ namespace MagnumPhotos.API.Services
 {
     public class PropertyMappingService : IPropertyMappingService
     {
-        private Dictionary<string, PropertyMappingValue> _authorPropertyMapping =
+        private Dictionary<string, PropertyMappingValue> _photographerPropertyMapping =
            new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
            {
                { "Id", new PropertyMappingValue(new List<string>() { "Id" } ) },
@@ -22,7 +22,7 @@ namespace MagnumPhotos.API.Services
 
         public PropertyMappingService()
         {
-            propertyMappings.Add(new PropertyMapping<AuthorDto, Author>(_authorPropertyMapping));
+            propertyMappings.Add(new PropertyMapping<PhotographerDto, Photographer>(_photographerPropertyMapping));
         }
         public Dictionary<string, PropertyMappingValue>  GetPropertyMapping
             <TSource, TDestination>()

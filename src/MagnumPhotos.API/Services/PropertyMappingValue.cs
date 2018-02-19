@@ -1,4 +1,4 @@
-﻿using Library.API.Services.Interfaces;
+﻿using MagnumPhotos.API.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;

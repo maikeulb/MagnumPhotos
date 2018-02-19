@@ -16,26 +16,26 @@ namespace MagnumPhotos.API.Services
             _context = context;
         }
 
-        public void AddPhotographer(Photographer author)
+        public void AddPhotographer(Photographer photographer)
         {
-            _context.Photographers.Add(author);
+            _context.Photographers.Add(photographer);
         }
 
-        public void AddBookForPhotographer(int authorId, Book book)
+        public void AddBookForPhotographer(int photographerId, Book book)
         {
-            var author = GetPhotographer(authorId);
-            if (author != null)
-                author.Books.Add(book);
+            var photographer = GetPhotographer(photographerId);
+            if (photographer != null)
+                photographer.Books.Add(book);
         }
 
-        public bool PhotographerExists(int authorId)
+        public bool PhotographerExists(int photographerId)
         {
-            return _context.Photographers.Any(a => a.Id == authorId);
+            return _context.Photographers.Any(a => a.Id == photographerId);
         }
 
-        public void DeletePhotographer(Photographer author)
+        public void DeletePhotographer(Photographer photographer)
         {
-            _context.Photographers.Remove(author);
+            _context.Photographers.Remove(photographer);
         }
 
         public void DeleteBook(Book book)
@@ -43,29 +43,29 @@ namespace MagnumPhotos.API.Services
             _context.Books.Remove(book);
         }
 
-        public Photographer GetPhotographer(int authorId)
+        public Photographer GetPhotographer(int photographerId)
         {
-            return _context.Photographers.FirstOrDefault(a => a.Id == authorId);
+            return _context.Photographers.FirstOrDefault(a => a.Id == photographerId);
         }
 
         public PagedList<Photographer> GetPhotographers(
-            PhotographersResourceParameters authorsResourceParameters)
+            PhotographersResourceParameters photographersResourceParameters)
         {
             var collectionBeforePaging =
-                _context.Photographers.ApplySort(authorsResourceParameters.OrderBy,
+                _context.Photographers.ApplySort(photographersResourceParameters.OrderBy,
                 _propertyMappingService.GetPropertyMapping<PhotographerDto, Photographer>());
 
-            if (!string.IsNullOrEmpty(authorsResourceParameters.Genre))
+            if (!string.IsNullOrEmpty(photographersResourceParameters.Genre))
             {
-                var genreForWhereClause = authorsResourceParameters.Genre
+                var genreForWhereClause = photographersResourceParameters.Genre
                     .Trim().ToLowerInvariant();
                 collectionBeforePaging = collectionBeforePaging
                     .Where(a => a.Genre.ToLowerInvariant() == genreForWhereClause);
             }
 
-            if (!string.IsNullOrEmpty(authorsResourceParameters.SearchQuery))
+            if (!string.IsNullOrEmpty(photographersResourceParameters.SearchQuery))
             {
-                var searchQueryForWhereClause = authorsResourceParameters.SearchQuery
+                var searchQueryForWhereClause = photographersResourceParameters.SearchQuery
                     .Trim().ToLowerInvariant();
 
                 collectionBeforePaging = collectionBeforePaging
@@ -75,8 +75,8 @@ namespace MagnumPhotos.API.Services
             }
 
             return PagedList<Photographer>.Create(collectionBeforePaging,
-                authorsResourceParameters.PageNumber,
-                authorsResourceParameters.PageSize);               
+                photographersResourceParameters.PageNumber,
+                photographersResourceParameters.PageSize);               
         }
 
         public IEnumerable<Photographer> GetPhotographers()
@@ -84,24 +84,24 @@ namespace MagnumPhotos.API.Services
             return _context.Photographers.OrderBy(a => a.FirstName).ThenBy(a => a.LastName);
         }
 
-        public IEnumerable<Photographer> GetPhotographers(IEnumerable<int> authorIds)
+        public IEnumerable<Photographer> GetPhotographers(IEnumerable<int> photographerIds)
         {
-            return _context.Photographers.Where(a => authorIds.Contains(a.Id))
+            return _context.Photographers.Where(a => photographerIds.Contains(a.Id))
                 .OrderBy(a => a.FirstName)
                 .OrderBy(a => a.LastName)
                 .ToList();
         }
 
-        public Book GetBookForPhotographer(int authorId, int bookId)
+        public Book GetBookForPhotographer(int photographerId, int bookId)
         {
             return _context.Books
-              .Where(b => b.PhotographerId == authorId && b.Id == bookId).FirstOrDefault();
+              .Where(b => b.PhotographerId == photographerId && b.Id == bookId).FirstOrDefault();
         }
 
-        public IEnumerable<Book> GetBooksForPhotographer(int authorId)
+        public IEnumerable<Book> GetBooksForPhotographer(int photographerId)
         {
             return _context.Books
-                        .Where(b => b.PhotographerId == authorId).OrderBy(b => b.Title).ToList();
+                        .Where(b => b.PhotographerId == photographerId).OrderBy(b => b.Title).ToList();
         }
 
         public bool Save()

@@ -18,17 +18,14 @@ namespace MagnumPhotos.API.Controllers
         private IMagnumPhotosRepository _magnumPhotosRepository;
         private IUrlHelper _urlHelper;
         private IPropertyMappingService _propertyMappingService;
-        private ITypeHelperService _typeHelperService;
 
         public PhotographersController(IMagnumPhotosRepository magnumPhotosRepository,
             IUrlHelper urlHelper,
-            IPropertyMappingService propertyMappingService,
-            ITypeHelperService typeHelperService)
+            IPropertyMappingService propertyMappingService)
         {
             _magnumPhotosRepository = magnumPhotosRepository;
             _urlHelper = urlHelper;
             _propertyMappingService = propertyMappingService;
-            _typeHelperService = typeHelperService;
         }
 
         [HttpGet(Name = "GetPhotographers")]
@@ -38,10 +35,6 @@ namespace MagnumPhotos.API.Controllers
                (photographersResourceParameters.OrderBy))
                 return BadRequest();
 
-            if (!_typeHelperService.TypeHasProperties<PhotographerDto>
-                (photographersResourceParameters.Fields))
-                return BadRequest();
-            
             var photographersFromRepo = _magnumPhotosRepository.GetPhotographers(photographersResourceParameters);
 
             var previousPageLink = photographersFromRepo.HasPrevious ?
@@ -66,7 +59,7 @@ namespace MagnumPhotos.API.Controllers
                 Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
 
             var photographers = Mapper.Map<IEnumerable<PhotographerDto>>(photographersFromRepo);
-            return Ok(photographers.ShapeData(photographersResourceParameters.Fields));
+            return Ok(photographers);
         }
 
         private string CreatePhotographersResourceUri(
@@ -115,17 +108,13 @@ namespace MagnumPhotos.API.Controllers
         [HttpGet("{id}", Name ="GetPhotographer")]
         public IActionResult GetPhotographer(Guid id, [FromQuery] string fields)
         {
-            if (!_typeHelperService.TypeHasProperties<PhotographerDto>
-              (fields))
-                return BadRequest();
-
             var photographerFromRepo = _magnumPhotosRepository.GetPhotographer(id);
 
             if (photographerFromRepo == null)
                 return NotFound();
 
             var photographer = Mapper.Map<PhotographerDto>(photographerFromRepo);
-            return Ok(photographer.ShapeData(fields));
+            return Ok(photographer));
         }
 
         [HttpPost]
@@ -139,10 +128,7 @@ namespace MagnumPhotos.API.Controllers
             _magnumPhotosRepository.AddPhotographer(photographerEntity);
 
             if (!_magnumPhotosRepository.Save())
-            {
                 throw new Exception("Creating an photographer failed on save.");
-               // return StatusCode(500, "A problem happened with handling your request.");
-            }
 
             var photographerToReturn = Mapper.Map<PhotographerDto>(photographerEntity);
 
@@ -174,6 +160,5 @@ namespace MagnumPhotos.API.Controllers
 
             return NoContent();
         }
- 
     }
 }

@@ -30,7 +30,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpGet(Name = "GetBooksForPhotographer")]
-        public IActionResult GetBooksForPhotographer(int photographerId)
+        public IActionResult GetBooksForPhotographer(Guid photographerId)
         {
             if (!_magnumPhotosRepository.PhotographerExists(photographerId))
                 return NotFound();
@@ -39,11 +39,11 @@ namespace MagnumPhotos.API.Controllers
 
             var booksForPhotographer = Mapper.Map<IEnumerable<BookDto>>(booksForPhotographerFromRepo);
 
-            return Ok();
+            return Ok(booksForPhotographer);
         }
 
         [HttpGet("{id}", Name = "GetBookForPhotographer")]
-        public IActionResult GetBookForPhotographer(int photographerId, int id)
+        public IActionResult GetBookForPhotographer(Guid photographerId, Guid id)
         {
             if (!_magnumPhotosRepository.PhotographerExists(photographerId))
                 return NotFound();
@@ -53,11 +53,11 @@ namespace MagnumPhotos.API.Controllers
                 return NotFound();
 
             var bookForPhotographer = Mapper.Map<BookDto>(bookForPhotographerFromRepo);
-            return Ok();
+            return Ok(booksForPhotographer);
        }
 
         [HttpPost(Name = "CreateBookForPhotographer")]
-        public IActionResult CreateBookForPhotographer(int photographerId, 
+        public IActionResult CreateBookForPhotographer(Guid photographerId, 
             [FromBody] BookForCreationDto book)
         {
             if (book == null)
@@ -83,11 +83,11 @@ namespace MagnumPhotos.API.Controllers
             var bookToReturn = Mapper.Map<BookDto>(bookEntity);
 
             return CreatedAtRoute("GetBookForPhotographer",
-                new { photographerId = photographerId, id = bookToReturn.Id })
+                new { photographerId = photographerId, id = bookToReturn.Id }, bookToReturn)
         }
 
         [HttpDelete("{id}", Name ="DeleteBookForPhotographer")]
-        public IActionResult DeleteBookForPhotographer(int photographerId, int id)
+        public IActionResult DeleteBookForPhotographer(Guid photographerId, Guid id)
         {
             if (!_magnumPhotosRepository.PhotographerExists(photographerId))
                 return NotFound();
@@ -107,7 +107,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpPut("{id}", Name = "UpdateBookForPhotographer")]
-        public IActionResult UpdateBookForPhotographer(int photographerId, int id,
+        public IActionResult UpdateBookForPhotographer(Guid photographerId, Guid id,
             [FromBody] BookForUpdateDto book)
         {
             if (book == null)
@@ -153,7 +153,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpPatch("{id}", Name = "PartiallyUpdateBookForPhotographer")]
-        public IActionResult PartiallyUpdateBookForPhotographer(int photographerId, int id,
+        public IActionResult PartiallyUpdateBookForPhotographer(Guid photographerId, Guid id,
             [FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
@@ -195,8 +195,6 @@ namespace MagnumPhotos.API.Controllers
             var bookToPatch = Mapper.Map<BookForUpdateDto>(bookForPhotographerFromRepo);
 
             patchDoc.ApplyTo(bookToPatch, ModelState);
-
-           // patchDoc.ApplyTo(bookToPatch);
 
             if (bookToPatch.Description == bookToPatch.Title)
                 ModelState.AddModelError(nameof(BookForUpdateDto), 

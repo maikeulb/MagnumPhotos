@@ -1,59 +1,59 @@
-using Library.API.Entities;
-using Library.API.Helpers;
-using Library.API.Models;
+using MagnumPhotos.API.Entities;
+using MagnumPhotos.API.Helpers;
+using MagnumPhotos.API.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace MagnumPhotos.API.Services
 {
-    public class LibraryRepository : ILibraryRepository
+    public class MagnumPhotosRepository : IMagnumPhotosRepository
     {
-        private LibraryContext _context;
+        private MagnumPhotosContext _context;
         private IPropertyMappingService _propertyMappingService;
 
-        public LibraryRepository(LibraryContext context, 
+        public MagnumPhotosRepository(MagnumPhotosContext context, 
             IPropertyMappingService propertyMappingService)
         {
             _context = context;
             _propertyMappingService = propertyMappingService;
         }
 
-        public void AddAuthor(Author author)
+        public void AddPhotographer(Photographer photographer)
         {
-            author.Id = Guid.NewGuid();
-            _context.Authors.Add(author);
+            photographer.Id = Guid.NewGuid();
+            _context.Photographers.Add(photographer);
 
-            if (author.Books.Any())
+            if (photographer.Books.Any())
             {
-                foreach (var book in author.Books)
+                foreach (var book in photographer.Books)
                 {
                     book.Id = Guid.NewGuid();
                 }
             }
         }
 
-        public void AddBookForAuthor(Guid authorId, Book book)
+        public void AddBookForPhotographer(Guid photographerId, Book book)
         {
-            var author = GetAuthor(authorId);
-            if (author != null)
+            var photographer = GetPhotographer(photographerId);
+            if (photographer != null)
             {
                 if (book.Id == Guid.Empty)
                 {
                     book.Id = Guid.NewGuid();
                 }
-                author.Books.Add(book);
+                photographer.Books.Add(book);
             }
         }
 
-        public bool AuthorExists(Guid authorId)
+        public bool PhotographerExists(Guid photographerId)
         {
-            return _context.Authors.Any(a => a.Id == authorId);
+            return _context.Photographers.Any(a => a.Id == photographerId);
         }
 
-        public void DeleteAuthor(Author author)
+        public void DeletePhotographer(Photographer photographer)
         {
-            _context.Authors.Remove(author);
+            _context.Photographers.Remove(photographer);
         }
 
         public void DeleteBook(Book book)
@@ -61,30 +61,30 @@ namespace MagnumPhotos.API.Services
             _context.Books.Remove(book);
         }
 
-        public Author GetAuthor(Guid authorId)
+        public Photographer GetPhotographer(Guid photographerId)
         {
-            return _context.Authors.FirstOrDefault(a => a.Id == authorId);
+            return _context.Photographers.FirstOrDefault(a => a.Id == photographerId);
         }
 
-        public PagedList<Author> GetAuthors(
-            AuthorsResourceParameters authorsResourceParameters)
+        public PagedList<Photographer> GetPhotographers(
+            PhotographersResourceParameters photographersResourceParameters)
         {
             var collectionBeforePaging =
-                _context.Authors                
-                .ApplySort(authorsResourceParameters.OrderBy,
-                _propertyMappingService.GetPropertyMapping<AuthorDto, Author>());
+                _context.Photographers                
+                .ApplySort(photographersResourceParameters.OrderBy,
+                _propertyMappingService.GetPropertyMapping<PhotographerDto, Photographer>());
 
-            if (!string.IsNullOrEmpty(authorsResourceParameters.Genre))
+            if (!string.IsNullOrEmpty(photographersResourceParameters.Genre))
             {
-                var genreForWhereClause = authorsResourceParameters.Genre
+                var genreForWhereClause = photographersResourceParameters.Genre
                     .Trim().ToLowerInvariant();
                 collectionBeforePaging = collectionBeforePaging
                     .Where(a => a.Genre.ToLowerInvariant() == genreForWhereClause);
             }
             
-            if (!string.IsNullOrEmpty(authorsResourceParameters.SearchQuery))
+            if (!string.IsNullOrEmpty(photographersResourceParameters.SearchQuery))
             {
-                var searchQueryForWhereClause = authorsResourceParameters.SearchQuery
+                var searchQueryForWhereClause = photographersResourceParameters.SearchQuery
                     .Trim().ToLowerInvariant();
 
                 collectionBeforePaging = collectionBeforePaging
@@ -93,29 +93,29 @@ namespace MagnumPhotos.API.Services
                     || a.LastName.ToLowerInvariant().Contains(searchQueryForWhereClause));
             }
 
-            return PagedList<Author>.Create(collectionBeforePaging,
-                authorsResourceParameters.PageNumber,
-                authorsResourceParameters.PageSize);               
+            return PagedList<Photographer>.Create(collectionBeforePaging,
+                photographersResourceParameters.PageNumber,
+                photographersResourceParameters.PageSize);               
         }
 
-        public IEnumerable<Author> GetAuthors(IEnumerable<Guid> authorIds)
+        public IEnumerable<Photographer> GetPhotographers(IEnumerable<Guid> photographerIds)
         {
-            return _context.Authors.Where(a => authorIds.Contains(a.Id))
+            return _context.Photographers.Where(a => photographerIds.Contains(a.Id))
                 .OrderBy(a => a.FirstName)
                 .OrderBy(a => a.LastName)
                 .ToList();
         }
 
-        public Book GetBookForAuthor(Guid authorId, Guid bookId)
+        public Book GetBookForPhotographer(Guid photographerId, Guid bookId)
         {
             return _context.Books
-              .Where(b => b.AuthorId == authorId && b.Id == bookId).FirstOrDefault();
+              .Where(b => b.PhotographerId == photographerId && b.Id == bookId).FirstOrDefault();
         }
 
-        public IEnumerable<Book> GetBooksForAuthor(Guid authorId)
+        public IEnumerable<Book> GetBooksForPhotographer(Guid photographerId)
         {
             return _context.Books
-                        .Where(b => b.AuthorId == authorId).OrderBy(b => b.Title).ToList();
+                        .Where(b => b.PhotographerId == photographerId).OrderBy(b => b.Title).ToList();
         }
 
         public bool Save()

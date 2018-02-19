@@ -5,7 +5,7 @@ namespace MagnumPhotos.API.Entities
 {
     public class Photographer
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string FirstName { get; set; }
 

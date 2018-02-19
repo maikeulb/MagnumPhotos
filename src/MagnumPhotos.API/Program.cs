@@ -7,6 +7,9 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using MagnumPhotos.API.Data.Seed;
+using MagnumPhotos.API.Data.Context;
 
 namespace MagnumPhotos.API
 {
@@ -14,7 +17,24 @@ namespace MagnumPhotos.API
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            var host = BuildWebHost(args);
+
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var magnumPhotosContext = services.GetRequiredService<MagnumPhotosContext>();
+                    var magnumPhotosContextInitializerLogger = services.GetRequiredService<ILogger<MagnumPhotosContextInitializer>>();
+                    MagnumPhotosContextInitializer.Initialize(magnumPhotosContext, magnumPhotosContextInitializerLogger).Wait();
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while seeding the database.");
+                }
+            }
+            host.Run();
         }
 
         public static IWebHost BuildWebHost(string[] args) =>

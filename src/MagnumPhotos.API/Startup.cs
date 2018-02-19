@@ -80,8 +80,6 @@ namespace MagnumPhotos.API
 
             services.AddTransient<IPropertyMappingService, PropertyMappingService>();
 
-            services.AddScoped<IUrlHelper, UrlHelper>();
-
             services.AddHttpCacheHeaders(
                 (expirationModelOptions)
                 =>

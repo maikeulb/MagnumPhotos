@@ -1,8 +1,5 @@
-﻿using FluentValidation.AspNetCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AspNetCoreRateLimit;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +14,10 @@ using MagnumPhotos.API.Helpers;
 using MagnumPhotos.API.Data.Seed;
 using MagnumPhotos.API.Data.Context;
 using Newtonsoft.Json.Serialization;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MagnumPhotos.API
 {
@@ -31,7 +32,25 @@ namespace MagnumPhotos.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(setup => 
+            {
+                setup.ReturnHttpNotAcceptable = true;
+
+                var jsonInputFormatter = setup.InputFormatters
+                .OfType<JsonInputFormatter>().FirstOrDefault();
+                if (jsonInputFormatter != null)
+                {
+                    jsonInputFormatter.SupportedMediaTypes
+                    .Add("application/vnd.marvin.author.full+json");
+                    jsonInputFormatter.SupportedMediaTypes
+                    .Add("application/vnd.marvin.authorwithdateofdeath.full+json");
+                }
+
+                var jsonOutputFormatter = setup.OutputFormatters
+                    .OfType<JsonOutputFormatter>().FirstOrDefault();
+                if (jsonOutputFormatter != null)
+                    jsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.marvin.hateoas+json");
+            }
             .AddJsonOptions(options =>
             {
                 options.SerializerSettings.ContractResolver =
@@ -56,6 +75,43 @@ namespace MagnumPhotos.API
             services.AddTransient<IPropertyMappingService, PropertyMappingService>();
 
             services.AddScoped<IUrlHelper, UrlHelper>(); */
+
+            services.AddHttpCacheHeaders(
+                (expirationModelOptions)
+                =>
+                {
+                    expirationModelOptions.MaxAge = 600;
+                }, 
+                (validationModelOptions)
+                =>
+                {
+                    validationModelOptions.AddMustRevalidate = true;
+                });
+            
+            services.AddMemoryCache();
+
+            services.Configure<IpRateLimitOptions>((options) =>
+            {
+                options.GeneralRules = new System.Collections.Generic.List<RateLimitRule>()
+                {
+                    new RateLimitRule()
+                    {
+                        Endpoint = "*",
+                        Limit = 1000,
+                        Period = "5m"
+                    },
+                    new RateLimitRule()
+                    {
+                        Endpoint = "*",
+                        Limit = 200,
+                        Period = "10s"
+                    }
+                };
+            });
+
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
@@ -105,6 +161,11 @@ namespace MagnumPhotos.API
             });
 
             app.UseMvc();
+
+            app.UseIpRateLimiting();
+
+            app.UseHttpCacheHeaders();
+
         }
     }
 }

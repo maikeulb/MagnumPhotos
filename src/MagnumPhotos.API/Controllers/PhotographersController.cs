@@ -31,8 +31,7 @@ namespace MagnumPhotos.API.Controllers
 
         [HttpGet(Name = "GetPhotographers")]
         [HttpHead]
-        public IActionResult GetPhotographers(PhotographersResourceParameters photographersResourceParameters,
-            [FromHeader(Name = "Accept")] string mediaType)
+        public IActionResult GetPhotographers(PhotographersResourceParameters photographersResourceParameters)
         {
             if (!_propertyMappingService.ValidMappingExistsFor<PhotographerDto, Photographer>
                (photographersResourceParameters.OrderBy))

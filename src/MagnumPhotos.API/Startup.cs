@@ -81,13 +81,11 @@ namespace MagnumPhotos.API
             services.AddTransient<IPropertyMappingService, PropertyMappingService>();
 
             services.AddHttpCacheHeaders(
-                (expirationModelOptions)
-                =>
+                (expirationModelOptions) =>
                 {
                     expirationModelOptions.MaxAge = 600;
                 }, 
-                (validationModelOptions)
-                =>
+                (validationModelOptions) =>
                 {
                     validationModelOptions.AddMustRevalidate = true;
                 });
@@ -166,12 +164,11 @@ namespace MagnumPhotos.API
                 options.CreateMap<Entities.Book, Models.BookForUpdateDto>();
             });
 
-            app.UseMvc();
-
             app.UseIpRateLimiting();
 
             app.UseHttpCacheHeaders();
 
+            app.UseMvc();
         }
     }
 }

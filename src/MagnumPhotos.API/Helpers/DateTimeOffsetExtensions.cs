@@ -13,9 +13,7 @@ namespace MagnumPhotos.API.Helpers
             int age = currentDate.Year - dateTimeOffset.Year;
 
             if (currentDate < dateTimeOffset.AddYears(age))
-            {
                 age--;
-            }
 
             return age;
         }

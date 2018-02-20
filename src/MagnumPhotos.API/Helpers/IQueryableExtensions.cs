@@ -43,9 +43,8 @@ namespace MagnumPhotos.API.Helpers
                 foreach (var destinationProperty in propertyMappingValue.DestinationProperties.Reverse())
                 {
                     if (propertyMappingValue.Revert)
-                    {
                         orderDescending = !orderDescending;
-                    }
+
                     source = source.OrderBy(destinationProperty + (orderDescending ? " descending" : " ascending"));
                 }
             }

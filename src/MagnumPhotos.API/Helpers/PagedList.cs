@@ -14,18 +14,12 @@ namespace MagnumPhotos.API.Helpers
 
         public bool HasPrevious
         {
-            get
-            {
-                return (CurrentPage > 1);
-            }
+            get => (CurrentPage > 1);
         }
 
         public bool HasNext
         {
-            get
-            {
-                return (CurrentPage < TotalPages);
-            }
+            get => (CurrentPage < TotalPages);
         }
 
         public PagedList(List<T> items, int count, int pageNumber, int pageSize)

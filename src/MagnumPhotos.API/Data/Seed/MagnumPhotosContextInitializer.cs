@@ -30,7 +30,7 @@ namespace MagnumPhotos.API.Data.Seed
                 context.Books.AddRange(
                     GetPreconfiguredBooks());
 
-                    await context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
 
         }

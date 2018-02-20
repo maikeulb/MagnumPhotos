@@ -31,7 +31,6 @@ namespace MagnumPhotos.API.Services
             var collectionBeforePaging =
                 _context.Photographers.ApplySort(photographersResourceParameters.OrderBy,
                 _propertyMappingService.GetPropertyMapping<PhotographerDto, Photographer>());
-
             if (!string.IsNullOrEmpty(photographersResourceParameters.Genre))
             {
                 var genreForWhereClause = photographersResourceParameters.Genre
@@ -39,18 +38,15 @@ namespace MagnumPhotos.API.Services
                 collectionBeforePaging = collectionBeforePaging
                     .Where(a => a.Genre.ToLowerInvariant() == genreForWhereClause);
             }
-
             if (!string.IsNullOrEmpty(photographersResourceParameters.SearchQuery))
             {
                 var searchQueryForWhereClause = photographersResourceParameters.SearchQuery
                     .Trim().ToLowerInvariant();
-                
                 collectionBeforePaging = collectionBeforePaging
                     .Where(a => a.Genre.ToLowerInvariant().Contains(searchQueryForWhereClause)
                     || a.FirstName.ToLowerInvariant().Contains(searchQueryForWhereClause)
                     || a.LastName.ToLowerInvariant().Contains(searchQueryForWhereClause));
             }
-
             return PagedList<Photographer>.Create(collectionBeforePaging,
                 photographersResourceParameters.PageNumber,
                 photographersResourceParameters.PageSize);               
@@ -58,7 +54,8 @@ namespace MagnumPhotos.API.Services
 
         public Photographer GetPhotographer(Guid photographerId)
         {
-            return _context.Photographers.FirstOrDefault(a => a.Id == photographerId);
+            return _context.Photographers
+                .FirstOrDefault(a => a.Id == photographerId);
         }
 
         public IEnumerable<Photographer> GetPhotographers(IEnumerable<Guid> photographerIds)

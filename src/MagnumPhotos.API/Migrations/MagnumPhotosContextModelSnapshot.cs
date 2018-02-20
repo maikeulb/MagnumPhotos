@@ -25,15 +25,12 @@ namespace MagnumPhotos.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime?>("CopyrightDate")
-                        .IsRequired();
+                    b.Property<DateTime?>("CopyrightDate");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500);
 
                     b.Property<Guid>("PhotographerId");
-
-                    b.Property<Guid?>("PhotographerId1");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -42,8 +39,6 @@ namespace MagnumPhotos.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("PhotographerId");
-
-                    b.HasIndex("PhotographerId1");
 
                     b.ToTable("Books");
                 });
@@ -75,13 +70,9 @@ namespace MagnumPhotos.Migrations
             modelBuilder.Entity("MagnumPhotos.API.Entities.Book", b =>
                 {
                     b.HasOne("MagnumPhotos.API.Entities.Photographer", "Photographer")
-                        .WithMany()
+                        .WithMany("Books")
                         .HasForeignKey("PhotographerId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("MagnumPhotos.API.Entities.Photographer")
-                        .WithMany("Books")
-                        .HasForeignKey("PhotographerId1");
                 });
 #pragma warning restore 612, 618
         }

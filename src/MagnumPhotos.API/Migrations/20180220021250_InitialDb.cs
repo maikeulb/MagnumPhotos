@@ -29,10 +29,9 @@ namespace MagnumPhotos.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    CopyrightDate = table.Column<DateTime>(nullable: false),
+                    CopyrightDate = table.Column<DateTime>(nullable: true),
                     Description = table.Column<string>(maxLength: 500, nullable: true),
                     PhotographerId = table.Column<Guid>(nullable: false),
-                    PhotographerId1 = table.Column<Guid>(nullable: true),
                     Title = table.Column<string>(maxLength: 100, nullable: false)
                 },
                 constraints: table =>
@@ -44,23 +43,12 @@ namespace MagnumPhotos.Migrations
                         principalTable: "Photographers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Books_Photographers_PhotographerId1",
-                        column: x => x.PhotographerId1,
-                        principalTable: "Photographers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Books_PhotographerId",
                 table: "Books",
                 column: "PhotographerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Books_PhotographerId1",
-                table: "Books",
-                column: "PhotographerId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

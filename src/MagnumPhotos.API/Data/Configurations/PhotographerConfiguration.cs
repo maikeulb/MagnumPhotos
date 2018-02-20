@@ -12,9 +12,6 @@ namespace MagnumPhotos.API.Data.Configurations
 
             builder.HasKey(a => a.Id);
 
-            builder.Property(a => a.Id)
-               .IsRequired(true);
-
             builder.Property(a => a.FirstName)
                 .IsRequired(true)
                 .HasMaxLength(50);

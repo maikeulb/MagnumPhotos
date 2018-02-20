@@ -12,9 +12,6 @@ namespace MagnumPhotos.API.Data.Configurations
 
             builder.HasKey(b => b.Id);
 
-            builder.Property(b => b.Id)
-               .IsRequired(true);
-
             builder.Property(b => b.Title)
                 .IsRequired(true)
                 .HasMaxLength(100);
@@ -23,11 +20,10 @@ namespace MagnumPhotos.API.Data.Configurations
                 .IsRequired(false)
                 .HasMaxLength(500);
 
-            builder.Property(b => b.CopyrightDate)
-               .IsRequired();
+            builder.Property(b => b.CopyrightDate);
 
-            builder.HasOne(b => b.Photographer)
-                .WithMany()
+            builder.HasOne(p => p.Photographer)
+                .WithMany(p => p.Books)
                 .HasForeignKey(b => b.PhotographerId);
         }
     }

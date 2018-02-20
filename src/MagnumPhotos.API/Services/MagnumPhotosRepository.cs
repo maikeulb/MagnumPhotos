@@ -98,9 +98,8 @@ namespace MagnumPhotos.API.Services
             if (photographer != null)
             {
                 if (book.Id == Guid.Empty)
-                {
                     book.Id = Guid.NewGuid();
-                }
+
                 photographer.Books.Add(book);
             }
         }

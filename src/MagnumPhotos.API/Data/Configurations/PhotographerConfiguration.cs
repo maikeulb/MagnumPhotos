@@ -16,6 +16,10 @@ namespace MagnumPhotos.API.Data.Configurations
                 .IsRequired(true)
                 .HasMaxLength(50);
 
+            builder.Property(a => a.Genre)
+                .IsRequired(true)
+                .HasMaxLength(50);
+
             builder.Property(a => a.LastName)
                 .IsRequired(true)
                 .HasMaxLength(50);

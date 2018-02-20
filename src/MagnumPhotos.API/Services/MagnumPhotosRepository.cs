@@ -4,6 +4,7 @@ using MagnumPhotos.API.Entities;
 using MagnumPhotos.API.Models;
 using MagnumPhotos.API.Data.Context;
 using MagnumPhotos.API.Helpers;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +15,18 @@ namespace MagnumPhotos.API.Services
     {
         private MagnumPhotosContext _context;
         private IPropertyMappingService _propertyMappingService;
+        private ILogger<MagnumPhotosRepository> _logger;
 
         public MagnumPhotosRepository(MagnumPhotosContext context,
+            ILogger<MagnumPhotosRepository> logger,
             IPropertyMappingService propertyMappingService)
         {
+            _logger = logger;
             _context = context;
             _propertyMappingService = propertyMappingService;
         }
 
-        public PagedList<Photographer> GetPhotographers(
-            PhotographersResourceParameters photographersResourceParameters)
+        public PagedList<Photographer> GetPhotographers(PhotographersResourceParameters photographersResourceParameters)
         {
             var collectionBeforePaging =
                 _context.Photographers.ApplySort(photographersResourceParameters.OrderBy,
@@ -41,7 +44,7 @@ namespace MagnumPhotos.API.Services
             {
                 var searchQueryForWhereClause = photographersResourceParameters.SearchQuery
                     .Trim().ToLowerInvariant();
-
+                
                 collectionBeforePaging = collectionBeforePaging
                     .Where(a => a.Genre.ToLowerInvariant().Contains(searchQueryForWhereClause)
                     || a.FirstName.ToLowerInvariant().Contains(searchQueryForWhereClause)

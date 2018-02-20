@@ -161,6 +161,8 @@ namespace MagnumPhotos.API
 
                 options.CreateMap<Models.BookForCreationDto, Entities.Book>();
 
+                options.CreateMap<Models.BookForUpdateDto, Entities.Book>();
+
                 options.CreateMap<Entities.Book, Models.BookForUpdateDto>();
             });
 

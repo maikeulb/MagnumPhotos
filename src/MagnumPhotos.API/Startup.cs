@@ -24,6 +24,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Swashbuckle.AspNetCore;
+using Swashbuckle.AspNetCore.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace MagnumPhotos.API
 {
@@ -41,21 +45,6 @@ namespace MagnumPhotos.API
             services.AddMvc(setup => 
             {
                 setup.ReturnHttpNotAcceptable = true;
-
-                var jsonInputFormatter = setup.InputFormatters
-                .OfType<JsonInputFormatter>().FirstOrDefault();
-                if (jsonInputFormatter != null)
-                {
-                    jsonInputFormatter.SupportedMediaTypes
-                    .Add("application/vnd.marvin.author.full+json");
-                    jsonInputFormatter.SupportedMediaTypes
-                    .Add("application/vnd.marvin.authorwithdateofdeath.full+json");
-                }
-
-                var jsonOutputFormatter = setup.OutputFormatters
-                    .OfType<JsonOutputFormatter>().FirstOrDefault();
-                if (jsonOutputFormatter != null)
-                    jsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.marvin.hateoas+json");
             })
             .AddJsonOptions(options =>
             {
@@ -63,6 +52,11 @@ namespace MagnumPhotos.API
                 new CamelCasePropertyNamesContractResolver();
             })
             .AddFluentValidation (options => { options.RegisterValidatorsFromAssemblyContaining<Startup> (); });
+
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new Info { Title = "Magnum Photos API", Version = "v1" });
+            });
 
             services.AddDbContext<MagnumPhotosContext> (options =>
                 options.UseNpgsql (Configuration.GetConnectionString ("MagnumPhotosApi")));
@@ -169,6 +163,14 @@ namespace MagnumPhotos.API
             app.UseHttpCacheHeaders();
 
             app.UseMvc();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Magnum Photos API V1");
+            });
+
         }
     }
 }

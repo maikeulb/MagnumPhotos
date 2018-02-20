@@ -31,7 +31,7 @@ namespace MagnumPhotos.API.Controllers
 
         [HttpGet(Name = "GetPhotographers")]
         [HttpHead]
-        public IActionResult GetPhotographers(PhotographersResourceParameters photographersResourceParameters)
+        public IActionResult GetPhotographers([FromQuery] PhotographersResourceParameters photographersResourceParameters)
         {
             if (!_propertyMappingService.ValidMappingExistsFor<PhotographerDto, Photographer>
                (photographersResourceParameters.OrderBy))
@@ -65,7 +65,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         private string CreatePhotographersResourceUri(
-            PhotographersResourceParameters photographersResourceParameters,
+            [FromQuery] PhotographersResourceParameters photographersResourceParameters,
             ResourceUriType type)
         {
             switch (type)
@@ -105,7 +105,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpGet("{id}", Name ="GetPhotographer")]
-        public IActionResult GetPhotographer(Guid id)
+        public IActionResult GetPhotographer([FromQuery] Guid id)
         {
             var photographerFromRepo = _magnumPhotosRepository.GetPhotographer(id);
 
@@ -137,7 +137,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpPost("{id}")]
-        public IActionResult BlockPhotographerCreation(Guid id)
+        public IActionResult BlockPhotographerCreation([FromQuery] Guid id)
         {
             if (_magnumPhotosRepository.PhotographerExists(id))
                 return new StatusCodeResult(StatusCodes.Status409Conflict);
@@ -146,7 +146,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult DeletePhotographer(Guid id)
+        public IActionResult DeletePhotographer([FromQuery] Guid id)
         {
             var photographerFromRepo = _magnumPhotosRepository.GetPhotographer(id);
             if (photographerFromRepo == null)

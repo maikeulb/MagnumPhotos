@@ -22,6 +22,23 @@ namespace MagnumPhotos.API.Controllers
             _magnumPhotosRepository = magnumPhotosRepository;
         }
 
+        [HttpGet("({ids})", Name="GetPhotographerCollection")]
+        [HttpHead]
+        public IActionResult GetPhotographerCollection(
+            [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
+        {           
+            if (ids == null)
+                return BadRequest();
+
+            var photographerEntities = _magnumPhotosRepository.GetPhotographers(ids);
+
+            if (ids.Count() != photographerEntities.Count())
+                return NotFound();
+
+            var photographersToReturn = Mapper.Map<IEnumerable<PhotographerDto>>(photographerEntities);
+            return Ok(photographersToReturn);
+        }
+
         [HttpPost]
         public IActionResult CreatePhotographerCollection(
             [FromBody] IEnumerable<PhotographerForCreationDto> photographerCollection)
@@ -52,20 +69,11 @@ namespace MagnumPhotos.API.Controllers
                 photographerCollectionToReturn);
         }
 
-        [HttpGet("({ids})", Name="GetPhotographerCollection")]
-        public IActionResult GetPhotographerCollection(
-            [ModelBinder(BinderType = typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
-        {           
-            if (ids == null)
-                return BadRequest();
-
-            var photographerEntities = _magnumPhotosRepository.GetPhotographers(ids);
-
-            if (ids.Count() != photographerEntities.Count())
-                return NotFound();
-
-            var photographersToReturn = Mapper.Map<IEnumerable<PhotographerDto>>(photographerEntities);
-            return Ok(photographersToReturn);
+        [HttpOptions]
+        public IActionResult GetPhotographerCollectionOptions()
+        {
+            Response.Headers.Add("Allow", "GET,OPTIONS,POST");
+            return Ok();
         }
     }
 }

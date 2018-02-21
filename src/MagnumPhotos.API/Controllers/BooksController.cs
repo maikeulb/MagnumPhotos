@@ -31,6 +31,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpGet (Name = "GetBooksForPhotographer")]
+        [HttpHead]
         public IActionResult GetBooksForPhotographer ([FromQuery]Guid photographerId)
         {
             if (!_magnumPhotosRepository.PhotographerExists (photographerId))
@@ -44,6 +45,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpGet ("{id}", Name = "GetBookForPhotographer")]
+        [HttpHead]
         public IActionResult GetBookForPhotographer ([FromQuery]Guid photographerId, [FromQuery]Guid id)
         {
             if (!_magnumPhotosRepository.PhotographerExists (photographerId))
@@ -209,6 +211,13 @@ namespace MagnumPhotos.API.Controllers
                 throw new Exception ($"Patching book {id} for photographer {photographerId} failed on save.");
 
             return NoContent ();
+        }
+
+        [HttpOptions]
+        public IActionResult GetBooksOptions()
+        {
+            Response.Headers.Add("Allow", "GET,OPTIONS,POST,PUT,PATCH");
+            return Ok();
         }
     }
 }

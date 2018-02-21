@@ -105,6 +105,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpGet("{id}", Name ="GetPhotographer")]
+        [HttpHead]
         public IActionResult GetPhotographer([FromQuery] Guid id)
         {
             var photographerFromRepo = _magnumPhotosRepository.GetPhotographer(id);
@@ -161,7 +162,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpOptions]
-        public IActionResult GetAuthorsOptions()
+        public IActionResult GetPhotographersOptions()
         {
             Response.Headers.Add("Allow", "GET,OPTIONS,POST");
             return Ok();

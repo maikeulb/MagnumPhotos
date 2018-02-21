@@ -78,10 +78,8 @@ namespace MagnumPhotos.API.Controllers
 
             var bookEntity = Mapper.Map<Book> (book);
 
-            _logger.LogInformation("before adding to repository");
             _magnumPhotosRepository.AddBookForPhotographer (photographerId, bookEntity);
 
-            _logger.LogInformation("before adding to saving");
             if (!_magnumPhotosRepository.Save ())
                 throw new Exception ($"Creating a book for photographer {photographerId} failed on save.");
 
@@ -89,26 +87,6 @@ namespace MagnumPhotos.API.Controllers
 
             return CreatedAtRoute ("GetBookForPhotographer",
                 new { photographerId = photographerId, id = bookToReturn.Id }, bookToReturn);
-        }
-
-        [HttpDelete ("{id}", Name = "DeleteBookForPhotographer")]
-        public IActionResult DeleteBookForPhotographer ([FromQuery]Guid photographerId, [FromQuery]Guid id)
-        {
-            if (!_magnumPhotosRepository.PhotographerExists (photographerId))
-                return NotFound ();
-
-            var bookForPhotographerFromRepo = _magnumPhotosRepository.GetBookForPhotographer (photographerId, id);
-            if (bookForPhotographerFromRepo == null)
-                return NotFound ();
-
-            _magnumPhotosRepository.DeleteBook (bookForPhotographerFromRepo);
-
-            if (!_magnumPhotosRepository.Save ())
-                throw new Exception ($"Deleting book {id} for photographer {photographerId} failed on save.");
-
-            _logger.LogInformation (100, $"Book {id} for photographer {photographerId} was deleted.");
-
-            return NoContent ();
         }
 
         [HttpPut ("{id}", Name = "UpdateBookForPhotographer")]
@@ -128,6 +106,7 @@ namespace MagnumPhotos.API.Controllers
                 return NotFound ();
 
             var bookForPhotographerFromRepo = _magnumPhotosRepository.GetBookForPhotographer (photographerId, id);
+
             if (bookForPhotographerFromRepo == null)
             {
                 var bookToAdd = Mapper.Map<Book> (book);
@@ -213,11 +192,71 @@ namespace MagnumPhotos.API.Controllers
             return NoContent ();
         }
 
+        [HttpDelete ("{id}", Name = "DeleteBookForPhotographer")]
+        public IActionResult DeleteBookForPhotographer ([FromQuery]Guid photographerId, [FromQuery]Guid id)
+        {
+            if (!_magnumPhotosRepository.PhotographerExists (photographerId))
+                return NotFound ();
+
+            var bookForPhotographerFromRepo = _magnumPhotosRepository.GetBookForPhotographer (photographerId, id);
+            if (bookForPhotographerFromRepo == null)
+                return NotFound ();
+
+            _magnumPhotosRepository.DeleteBook (bookForPhotographerFromRepo);
+
+            if (!_magnumPhotosRepository.Save ())
+                throw new Exception ($"Deleting book {id} for photographer {photographerId} failed on save.");
+
+            _logger.LogInformation (100, $"Book {id} for photographer {photographerId} was deleted.");
+
+            return NoContent ();
+        }
+
         [HttpOptions]
         public IActionResult GetBooksOptions()
         {
             Response.Headers.Add("Allow", "GET,OPTIONS,POST,PUT,PATCH");
             return Ok();
+        }
+
+        private BookDto CreateLinksForBook(BookDto book)
+        {
+            book.Links.Add(new LinkDto(_urlHelper.Link("GetBookForAuthor",
+                new { id = book.Id }),
+                "self",
+                "GET"));
+
+            book.Links.Add(
+                new LinkDto(_urlHelper.Link("DeleteBookForAuthor", 
+                new { id = book.Id }),
+                "delete_book",
+                "DELETE"));
+
+            book.Links.Add(
+                new LinkDto(_urlHelper.Link("UpdateBookForAuthor", 
+                new { id = book.Id }),
+                "update_book",
+                "PUT"));
+
+            book.Links.Add(
+                new LinkDto(_urlHelper.Link("PartiallyUpdateBookForAuthor", 
+                new { id = book.Id }),
+                "partially_update_book",
+                "PATCH"));
+
+            return book;
+        }
+
+        private LinkedCollectionResourceWrapperDto<BookDto> CreateLinksForBooks(
+            LinkedCollectionResourceWrapperDto<BookDto> booksWrapper)
+        {
+            // link to self
+            booksWrapper.Links.Add(
+                new LinkDto(_urlHelper.Link("GetBooksForAuthor", new { }),
+                "self",
+                "GET"));
+
+            return booksWrapper;
         }
     }
 }

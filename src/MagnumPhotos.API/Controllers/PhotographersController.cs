@@ -64,6 +64,70 @@ namespace MagnumPhotos.API.Controllers
             return Ok(photographers);
         }
 
+        [HttpGet("{id}", Name ="GetPhotographer")]
+        [HttpHead]
+        public IActionResult GetPhotographer([FromQuery] Guid id)
+        {
+            var photographerFromRepo = _magnumPhotosRepository.GetPhotographer(id);
+
+            if (photographerFromRepo == null)
+                return NotFound();
+
+            var photographer = Mapper.Map<PhotographerDto>(photographerFromRepo);
+            return Ok(photographer);
+        }
+
+        [HttpPost]
+        public IActionResult CreatePhotographer([FromBody] PhotographerForCreationDto photographer)
+        {
+            if (photographer == null)
+                return BadRequest();
+
+            var photographerEntity = Mapper.Map<Photographer>(photographer);
+
+            _magnumPhotosRepository.AddPhotographer(photographerEntity);
+
+            if (!_magnumPhotosRepository.Save())
+                throw new Exception("Creating an photographer failed on save.");
+
+            var photographerToReturn = Mapper.Map<PhotographerDto>(photographerEntity);
+            return CreatedAtRoute("GetPhotographer",
+                new { id = photographerToReturn.Id },
+                photographerToReturn);
+        }
+
+        [HttpPost("{id}")]
+        public IActionResult BlockPhotographerCreation([FromQuery] Guid id)
+        {
+            if (_magnumPhotosRepository.PhotographerExists(id))
+                return new StatusCodeResult(StatusCodes.Status409Conflict);
+
+            return NotFound();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeletePhotographer([FromQuery] Guid id)
+        {
+            var photographerFromRepo = _magnumPhotosRepository.GetPhotographer(id);
+
+            if (photographerFromRepo == null)
+                return NotFound();
+
+            _magnumPhotosRepository.DeletePhotographer(photographerFromRepo);
+
+            if (!_magnumPhotosRepository.Save())
+                throw new Exception($"Deleting photographer {id} failed on save.");
+
+            return NoContent();
+        }
+
+        [HttpOptions]
+        public IActionResult GetPhotographersOptions()
+        {
+            Response.Headers.Add("Allow", "GET,OPTIONS,POST,DELETE");
+            return Ok();
+        }
+
         private string CreatePhotographersResourceUri(
             [FromQuery] PhotographersResourceParameters photographersResourceParameters,
             ResourceUriType type)
@@ -102,70 +166,6 @@ namespace MagnumPhotos.API.Controllers
                         pageSize = photographersResourceParameters.PageSize
                     });
             }
-        }
-
-        [HttpGet("{id}", Name ="GetPhotographer")]
-        [HttpHead]
-        public IActionResult GetPhotographer([FromQuery] Guid id)
-        {
-            var photographerFromRepo = _magnumPhotosRepository.GetPhotographer(id);
-
-            if (photographerFromRepo == null)
-                return NotFound();
-
-            var photographer = Mapper.Map<PhotographerDto>(photographerFromRepo);
-            return Ok(photographer);
-        }
-
-        [HttpPost]
-        public IActionResult CreatePhotographer([FromBody] PhotographerForCreationDto photographer)
-        {
-            if (photographer == null)
-                return BadRequest();
-
-            var photographerEntity = Mapper.Map<Photographer>(photographer);
-
-            _magnumPhotosRepository.AddPhotographer(photographerEntity);
-
-            if (!_magnumPhotosRepository.Save())
-                throw new Exception("Creating an photographer failed on save.");
-
-            var photographerToReturn = Mapper.Map<PhotographerDto>(photographerEntity);
-
-            return CreatedAtRoute("GetPhotographer",
-                new { id = photographerToReturn.Id },
-                photographerToReturn);
-        }
-
-        [HttpPost("{id}")]
-        public IActionResult BlockPhotographerCreation([FromQuery] Guid id)
-        {
-            if (_magnumPhotosRepository.PhotographerExists(id))
-                return new StatusCodeResult(StatusCodes.Status409Conflict);
-
-            return NotFound();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult DeletePhotographer([FromQuery] Guid id)
-        {
-            var photographerFromRepo = _magnumPhotosRepository.GetPhotographer(id);
-            if (photographerFromRepo == null)
-                return NotFound();
-
-            _magnumPhotosRepository.DeletePhotographer(photographerFromRepo);
-
-            if (!_magnumPhotosRepository.Save())
-                throw new Exception($"Deleting photographer {id} failed on save.");
-
-            return NoContent();
-        }
-
-        [HttpOptions]
-        public IActionResult GetPhotographersOptions()
-        {
-            Response.Headers.Add("Allow", "GET,OPTIONS,POST");
-            return Ok();
         }
     }
 }

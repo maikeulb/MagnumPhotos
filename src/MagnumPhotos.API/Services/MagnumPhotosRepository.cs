@@ -60,7 +60,8 @@ namespace MagnumPhotos.API.Services
 
         public IEnumerable<Photographer> GetPhotographers(IEnumerable<Guid> photographerIds)
         {
-            return _context.Photographers.Where(a => photographerIds.Contains(a.Id))
+            return _context.Photographers
+                .Where(a => photographerIds.Contains(a.Id))
                 .OrderBy(a => a.FirstName)
                 .OrderBy(a => a.LastName)
                 .ToList();
@@ -69,13 +70,16 @@ namespace MagnumPhotos.API.Services
         public Book GetBookForPhotographer(Guid photographerId, Guid bookId)
         {
             return _context.Books
-              .Where(b => b.PhotographerId == photographerId && b.Id == bookId).FirstOrDefault();
+                .Where(b => b.PhotographerId == photographerId && b.Id == bookId)
+                .FirstOrDefault();
         }
 
         public IEnumerable<Book> GetBooksForPhotographer(Guid photographerId)
         {
             return _context.Books
-                        .Where(b => b.PhotographerId == photographerId).OrderBy(b => b.Title).ToList();
+                .Where(b => b.PhotographerId == photographerId)
+                .OrderBy(b => b.Title)
+                .ToList();
         }
 
         public void AddPhotographer(Photographer photographer)
@@ -100,23 +104,27 @@ namespace MagnumPhotos.API.Services
                 if (book.Id == Guid.Empty)
                     book.Id = Guid.NewGuid();
 
-                photographer.Books.Add(book);
+                photographer.Books
+                    .Add(book);
             }
         }
 
         public bool PhotographerExists(Guid photographerId)
         {
-            return _context.Photographers.Any(a => a.Id == photographerId);
+            return _context
+                .Photographers.Any(a => a.Id == photographerId);
         }
 
         public void DeletePhotographer(Photographer photographer)
         {
-            _context.Photographers.Remove(photographer);
+            _context.Photographers
+                .Remove(photographer);
         }
 
         public void DeleteBook(Book book)
         {
-            _context.Books.Remove(book);
+            _context.Books
+                .Remove(book);
         }
 
         public bool Save()

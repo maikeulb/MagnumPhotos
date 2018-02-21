@@ -1,7 +1,7 @@
 using MagnumPhotos.API.Models;
 using FluentValidation;
 
-namespace MagnumPhotos.Api.Models.Validators
+namespace MagnumPhotos.API.Models.Validators
 {
     public class BookForManipulationDtoValidator : AbstractValidator<BookForManipulationDto>
     {

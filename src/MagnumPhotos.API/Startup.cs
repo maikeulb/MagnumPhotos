@@ -113,6 +113,7 @@ namespace MagnumPhotos.API
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
             ILoggerFactory loggerFactory, MagnumPhotosContext magnumPhotosContext)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -131,10 +132,8 @@ namespace MagnumPhotos.API
                                 exceptionHandlerFeature.Error,
                                 exceptionHandlerFeature.Error.Message);
                         }
-
                         context.Response.StatusCode = 500;
                         await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
-
                     });                      
                 });
             }

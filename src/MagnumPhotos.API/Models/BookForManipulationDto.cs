@@ -12,6 +12,5 @@ namespace MagnumPhotos.API.Models
         public virtual string Description { get; set; }
 
         public DateTime CopyrightDate { get; set; }
-
     }
 }

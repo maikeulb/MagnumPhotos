@@ -10,6 +10,7 @@ using MagnumPhotos.API.Helpers;
 using AutoMapper;
 using MagnumPhotos.API.Entities;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 
 namespace MagnumPhotos.API.Controllers
 {
@@ -18,21 +19,23 @@ namespace MagnumPhotos.API.Controllers
     {
         private IMagnumPhotosRepository _magnumPhotosRepository;
         private IUrlHelper _urlHelper;
+        private ILogger<BooksController> _logger;
         private IPropertyMappingService _propertyMappingService;
 
         public PhotographersController(IMagnumPhotosRepository magnumPhotosRepository,
             IUrlHelper urlHelper,
+            ILogger<BooksController> logger,
             IPropertyMappingService propertyMappingService)
         {
             _magnumPhotosRepository = magnumPhotosRepository;
+            _logger = logger;
             _urlHelper = urlHelper;
             _propertyMappingService = propertyMappingService;
         }
 
         [HttpGet (Name = "GetPhotographers")]
         [HttpHead]
-        public IActionResult GetPhotographers([FromQuery] PhotographersResourceParameters photographersResourceParameters,
-            [FromHeader(Name = "Accept")] string mediaType)
+        public IActionResult GetPhotographers(PhotographersResourceParameters photographersResourceParameters)
         {
             if (!_propertyMappingService.ValidMappingExistsFor<PhotographerDto, Photographer>
                (photographersResourceParameters.OrderBy))
@@ -70,7 +73,7 @@ namespace MagnumPhotos.API.Controllers
 
         [HttpGet ("{id}", Name = "GetPhotographer")]
         [HttpHead]
-        public IActionResult GetPhotographer([FromQuery] Guid id)
+        public IActionResult GetPhotographer(Guid id)
         {
             var photographerFromRepo = _magnumPhotosRepository.GetPhotographer(id);
 
@@ -78,6 +81,7 @@ namespace MagnumPhotos.API.Controllers
                 return NotFound();
 
             var photographer = Mapper.Map<PhotographerDto>(photographerFromRepo);
+
             return Ok (CreateLinksForPhotographer(photographer));
         }
 
@@ -101,7 +105,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpPost ("{id}", Name = "BlockPhotographerCreation")]
-        public IActionResult BlockPhotographerCreation([FromQuery] Guid id)
+        public IActionResult BlockPhotographerCreation(Guid id)
         {
             if (_magnumPhotosRepository.PhotographerExists(id))
                 return new StatusCodeResult(StatusCodes.Status409Conflict);
@@ -110,7 +114,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpDelete ("{id}", Name = "DeletePhotographer")]
-        public IActionResult DeletePhotographer([FromQuery] Guid id)
+        public IActionResult DeletePhotographer(Guid id)
         {
             var photographerFromRepo = _magnumPhotosRepository.GetPhotographer(id);
 

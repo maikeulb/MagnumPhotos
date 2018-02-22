@@ -32,7 +32,7 @@ namespace MagnumPhotos.API.Controllers
 
         [HttpGet (Name = "GetBooksForPhotographer")]
         [HttpHead]
-        public IActionResult GetBooksForPhotographer ([FromQuery]Guid photographerId)
+        public IActionResult GetBooksForPhotographer (Guid photographerId)
         {
             if (!_magnumPhotosRepository.PhotographerExists (photographerId))
                 return NotFound ();
@@ -54,7 +54,7 @@ namespace MagnumPhotos.API.Controllers
 
         [HttpGet ("{id}", Name = "GetBookForPhotographer")]
         [HttpHead]
-        public IActionResult GetBookForPhotographer ([FromQuery]Guid photographerId, [FromQuery]Guid id)
+        public IActionResult GetBookForPhotographer (Guid photographerId, Guid id)
         {
             if (!_magnumPhotosRepository.PhotographerExists (photographerId))
                 return NotFound ();
@@ -69,7 +69,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpPost (Name = "CreateBookForPhotographer")]
-        public IActionResult CreateBookForPhotographer ([FromQuery]Guid photographerId, [FromBody] BookForCreationDto book)
+        public IActionResult CreateBookForPhotographer (Guid photographerId, [FromBody] BookForCreationDto book)
         {
             if (book == null)
                 return BadRequest ();
@@ -99,7 +99,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpPut ("{id}", Name = "UpdateBookForPhotographer")]
-        public IActionResult UpdateBookForPhotographer ([FromQuery]Guid photographerId, Guid id, [FromBody] BookForUpdateDto book)
+        public IActionResult UpdateBookForPhotographer (Guid photographerId, Guid id, [FromBody] BookForUpdateDto book)
         {
             if (book == null)
                 return BadRequest ();
@@ -142,7 +142,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpPatch ("{id}", Name = "PartiallyUpdateBookForPhotographer")]
-        public IActionResult PartiallyUpdateBookForPhotographer ([FromQuery]Guid photographerId, [FromQuery]Guid id, [FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
+        public IActionResult PartiallyUpdateBookForPhotographer (Guid photographerId, Guid id, [FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
                 return BadRequest ();
@@ -202,7 +202,7 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpDelete ("{id}", Name = "DeleteBookForPhotographer")]
-        public IActionResult DeleteBookForPhotographer ([FromQuery]Guid photographerId, [FromQuery]Guid id)
+        public IActionResult DeleteBookForPhotographer (Guid photographerId, Guid id)
         {
             if (!_magnumPhotosRepository.PhotographerExists (photographerId))
                 return NotFound ();

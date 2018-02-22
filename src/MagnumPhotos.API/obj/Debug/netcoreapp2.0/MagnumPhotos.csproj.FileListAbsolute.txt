@@ -8,3 +8,4 @@
 /home/michael/Projects-DotNet/MagnumPhotos/src/MagnumPhotos.API/bin/Debug/netcoreapp2.0/MagnumPhotos.pdb
 /home/michael/Projects-DotNet/MagnumPhotos/src/MagnumPhotos.API/obj/Debug/netcoreapp2.0/MagnumPhotos.dll
 /home/michael/Projects-DotNet/MagnumPhotos/src/MagnumPhotos.API/obj/Debug/netcoreapp2.0/MagnumPhotos.pdb
+/home/michael/Projects-DotNet/MagnumPhotos/src/MagnumPhotos.API/bin/Debug/netcoreapp2.0/nlog.config

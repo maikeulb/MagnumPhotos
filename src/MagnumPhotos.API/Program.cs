@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using MagnumPhotos.API.Data.Seed;
 using MagnumPhotos.API.Data.Context;
+using NLog.Web;
 
 namespace MagnumPhotos.API
 {
@@ -40,6 +41,7 @@ namespace MagnumPhotos.API
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                .UseNLog()
                 .Build();
     }
 }

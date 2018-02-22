@@ -20,6 +20,7 @@ using MagnumPhotos.API.Helpers;
 using MagnumPhotos.API.Data.Seed;
 using MagnumPhotos.API.Data.Context;
 using Newtonsoft.Json.Serialization;
+using NLog.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;

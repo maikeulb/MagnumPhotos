@@ -41,7 +41,15 @@ namespace MagnumPhotos.API.Controllers
 
             var booksForPhotographer = Mapper.Map<IEnumerable<BookDto>> (booksForPhotographerFromRepo);
 
-            return Ok (booksForPhotographer);
+            booksForPHotographer = booksForPhotographer.Select(book =>
+            {
+                book = CreateLinksForBook(book);
+                return book;
+            });
+
+            var wrapper = new LinkedCollectionResourceWrapperDto<BookDto>(booksForPhotographer);
+
+            return Ok (CreateLinksForBooks(wrapper));
         }
 
         [HttpGet ("{id}", Name = "GetBookForPhotographer")]
@@ -57,7 +65,7 @@ namespace MagnumPhotos.API.Controllers
                 return NotFound ();
 
             var bookForPhotographer = Mapper.Map<BookDto> (bookForPhotographerFromRepo);
-            return Ok (bookForPhotographer);
+            return Ok (CreateLinksForBook(bookForPhotographer));
         }
 
         [HttpPost (Name = "CreateBookForPhotographer")]
@@ -85,8 +93,9 @@ namespace MagnumPhotos.API.Controllers
 
             var bookToReturn = Mapper.Map<BookDto> (bookEntity);
 
-            return CreatedAtRoute ("GetBookForPhotographer",
-                new { photographerId = photographerId, id = bookToReturn.Id }, bookToReturn);
+            return CreatedAtRoute("GetBookForPhotographer",
+                new { photographerId = photographerId, id = bookToReturn.Id },
+                CreateLinksForBook(bookToReturn));
         }
 
         [HttpPut ("{id}", Name = "UpdateBookForPhotographer")]
@@ -221,25 +230,25 @@ namespace MagnumPhotos.API.Controllers
 
         private BookDto CreateLinksForBook(BookDto book)
         {
-            book.Links.Add(new LinkDto(_urlHelper.Link("GetBookForAuthor",
+            book.Links.Add(new LinkDto(_urlHelper.Link("GetBookForPhotographer",
                 new { id = book.Id }),
                 "self",
                 "GET"));
 
             book.Links.Add(
-                new LinkDto(_urlHelper.Link("DeleteBookForAuthor", 
+                new LinkDto(_urlHelper.Link("DeleteBookForPhotographer", 
                 new { id = book.Id }),
                 "delete_book",
                 "DELETE"));
 
             book.Links.Add(
-                new LinkDto(_urlHelper.Link("UpdateBookForAuthor", 
+                new LinkDto(_urlHelper.Link("UpdateBookForPhotographer", 
                 new { id = book.Id }),
                 "update_book",
                 "PUT"));
 
             book.Links.Add(
-                new LinkDto(_urlHelper.Link("PartiallyUpdateBookForAuthor", 
+                new LinkDto(_urlHelper.Link("PartiallyUpdateBookForPhotographer", 
                 new { id = book.Id }),
                 "partially_update_book",
                 "PATCH"));
@@ -250,9 +259,8 @@ namespace MagnumPhotos.API.Controllers
         private LinkedCollectionResourceWrapperDto<BookDto> CreateLinksForBooks(
             LinkedCollectionResourceWrapperDto<BookDto> booksWrapper)
         {
-            // link to self
             booksWrapper.Links.Add(
-                new LinkDto(_urlHelper.Link("GetBooksForAuthor", new { }),
+                new LinkDto(_urlHelper.Link("GetBooksForPhotographer", new { }),
                 "self",
                 "GET"));
 

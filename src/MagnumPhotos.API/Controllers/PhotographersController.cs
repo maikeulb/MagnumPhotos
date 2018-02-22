@@ -29,7 +29,7 @@ namespace MagnumPhotos.API.Controllers
             _propertyMappingService = propertyMappingService;
         }
 
-        [HttpGet(Name = "GetPhotographers")]
+        [HttpGet (Name = "GetPhotographers")]
         [HttpHead]
         public IActionResult GetPhotographers([FromQuery] PhotographersResourceParameters photographersResourceParameters,
             [FromHeader(Name = "Accept")] string mediaType)
@@ -62,10 +62,13 @@ namespace MagnumPhotos.API.Controllers
                 Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
 
             var photographers = Mapper.Map<IEnumerable<PhotographerDto>>(photographersFromRepo);
-            return Ok(photographers);
+
+            var wrapper = new LinkedCollectionResourceWrapperDto<PhotographerDto>(photographers);
+
+            return Ok (CreateLinksForPhotographers(wrapper));
         }
 
-        [HttpGet("{id}", Name ="GetPhotographer")]
+        [HttpGet ("{id}", Name = "GetPhotographer")]
         [HttpHead]
         public IActionResult GetPhotographer([FromQuery] Guid id)
         {
@@ -75,10 +78,10 @@ namespace MagnumPhotos.API.Controllers
                 return NotFound();
 
             var photographer = Mapper.Map<PhotographerDto>(photographerFromRepo);
-            return Ok(photographer);
+            return Ok (CreateLinksForPhotographer(photographer));
         }
 
-        [HttpPost]
+        [HttpPost (Name = "CreatePhotographer")]
         public IActionResult CreatePhotographer([FromBody] PhotographerForCreationDto photographer)
         {
             if (photographer == null)
@@ -97,7 +100,7 @@ namespace MagnumPhotos.API.Controllers
                 photographerToReturn);
         }
 
-        [HttpPost("{id}")]
+        [HttpPost ("{id}", Name = "BlockPhotographerCreation")]
         public IActionResult BlockPhotographerCreation([FromQuery] Guid id)
         {
             if (_magnumPhotosRepository.PhotographerExists(id))
@@ -106,7 +109,7 @@ namespace MagnumPhotos.API.Controllers
             return NotFound();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete ("{id}", Name = "DeletePhotographer")]
         public IActionResult DeletePhotographer([FromQuery] Guid id)
         {
             var photographerFromRepo = _magnumPhotosRepository.GetPhotographer(id);
@@ -129,8 +132,35 @@ namespace MagnumPhotos.API.Controllers
             return Ok();
         }
 
+        private PhotographerDto CreateLinksForPhotographer(PhotographerDto photographer)
+        {
+            photographer.Links.Add(new LinkDto(_urlHelper.Link("GetPhotographer",
+                new { id = photographer.Id }),
+                "self",
+                "GET"));
+
+            photographer.Links.Add(
+                new LinkDto(_urlHelper.Link("DeletePhotographer", 
+                new { id = photographer.Id }),
+                "delete_photographer",
+                "DELETE"));
+
+            return photographer;
+        }
+
+        private LinkedCollectionResourceWrapperDto<PhotographerDto> CreateLinksForPhotographers(
+            LinkedCollectionResourceWrapperDto<PhotographerDto> photographersWrapper)
+        {
+            photographersWrapper.Links.Add(
+                new LinkDto(_urlHelper.Link("GetPhotographer", new { }),
+                "self",
+                "GET"));
+
+            return photographersWrapper;
+        }
+
         private string CreatePhotographersResourceUri(
-            [FromQuery] PhotographersResourceParameters photographersResourceParameters,
+            PhotographersResourceParameters photographersResourceParameters,
             ResourceUriType type)
         {
             switch (type)
@@ -155,7 +185,7 @@ namespace MagnumPhotos.API.Controllers
                           pageNumber = photographersResourceParameters.PageNumber + 1,
                           pageSize = photographersResourceParameters.PageSize
                       });
-
+                case ResourceUriType.Current:
                 default:
                     return _urlHelper.Link("GetPhotographers",
                     new

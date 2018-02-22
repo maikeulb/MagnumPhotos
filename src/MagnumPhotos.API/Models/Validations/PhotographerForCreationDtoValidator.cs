@@ -15,7 +15,7 @@ namespace MagnumPhotos.API.Models.Validators
                 .WithMessage("Please fill out lastname.");
             RuleFor(x => x.Genre)
                 .NotEmpty()
-                .WithMessage("Please fill out genre.")
+                .WithMessage("Please fill out genre.");
         }
     }
 }

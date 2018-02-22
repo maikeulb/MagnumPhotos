@@ -41,7 +41,7 @@ namespace MagnumPhotos.API.Controllers
 
             var booksForPhotographer = Mapper.Map<IEnumerable<BookDto>> (booksForPhotographerFromRepo);
 
-            booksForPHotographer = booksForPhotographer.Select(book =>
+            booksForPhotographer = booksForPhotographer.Select(book =>
             {
                 book = CreateLinksForBook(book);
                 return book;

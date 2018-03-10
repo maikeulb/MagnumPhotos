@@ -19,12 +19,12 @@ namespace MagnumPhotos.API.Controllers
     {
         private IMagnumPhotosRepository _magnumPhotosRepository;
         private IUrlHelper _urlHelper;
-        private ILogger<BooksController> _logger;
+        private ILogger<PhotographersController> _logger;
         private IPropertyMappingService _propertyMappingService;
 
         public PhotographersController(IMagnumPhotosRepository magnumPhotosRepository,
                 IUrlHelper urlHelper,
-                ILogger<BooksController> logger,
+                ILogger<PhotographersController> logger,
                 IPropertyMappingService propertyMappingService)
         {
             _magnumPhotosRepository = magnumPhotosRepository;

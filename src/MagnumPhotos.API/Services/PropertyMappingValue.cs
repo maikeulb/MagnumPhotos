@@ -1,8 +1,4 @@
-﻿using MagnumPhotos.API.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace MagnumPhotos.API.Services
 {
@@ -11,7 +7,7 @@ namespace MagnumPhotos.API.Services
         public IEnumerable<string> DestinationProperties { get; private set; }
         public bool Revert { get; private set; }
 
-        public PropertyMappingValue(IEnumerable<string> destinationProperties,
+        public PropertyMappingValue (IEnumerable<string> destinationProperties,
             bool revert = false)
         {
             DestinationProperties = destinationProperties;

@@ -1,18 +1,15 @@
-using Microsoft.AspNetCore.Mvc.ActionConstraints;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
 namespace MagnumPhotos.API.Helpers
 {
-    [AttributeUsage(AttributeTargets.All, Inherited = true, AllowMultiple = true)]
+    [AttributeUsage (AttributeTargets.All, Inherited = true, AllowMultiple = true)]
     public class RequestHeaderMatchesMediaTypeAttribute : Attribute, IActionConstraint
     {
         private readonly string[] _mediaTypes;
         private readonly string _requestHeaderToMatch;
 
-        public RequestHeaderMatchesMediaTypeAttribute(string requestHeaderToMatch,
+        public RequestHeaderMatchesMediaTypeAttribute (string requestHeaderToMatch,
             string[] mediaTypes)
         {
             _requestHeaderToMatch = requestHeaderToMatch;
@@ -27,11 +24,11 @@ namespace MagnumPhotos.API.Helpers
             }
         }
 
-        public bool Accept(ActionConstraintContext context)
+        public bool Accept (ActionConstraintContext context)
         {
             var requestHeaders = context.RouteContext.HttpContext.Request.Headers;
 
-            if (!requestHeaders.ContainsKey(_requestHeaderToMatch))
+            if (!requestHeaders.ContainsKey (_requestHeaderToMatch))
             {
                 return false;
             }
@@ -39,7 +36,7 @@ namespace MagnumPhotos.API.Helpers
             // if one of the media types matches, return true
             foreach (var mediaType in _mediaTypes)
             {
-                var mediaTypeMatches = string.Equals(requestHeaders[_requestHeaderToMatch].ToString(),
+                var mediaTypeMatches = string.Equals (requestHeaders[_requestHeaderToMatch].ToString (),
                     mediaType, StringComparison.OrdinalIgnoreCase);
 
                 if (mediaTypeMatches)

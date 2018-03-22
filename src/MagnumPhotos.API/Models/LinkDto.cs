@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace MagnumPhotos.API.Models
 {
     public class LinkDto
@@ -11,7 +6,7 @@ namespace MagnumPhotos.API.Models
         public string Rel { get; private set; }
         public string Method { get; private set; }
 
-        public LinkDto(string href, string rel, string method)
+        public LinkDto (string href, string rel, string method)
         {
             Href = href;
             Rel = rel;

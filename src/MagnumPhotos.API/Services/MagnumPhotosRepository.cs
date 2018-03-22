@@ -31,6 +31,7 @@ namespace MagnumPhotos.API.Services
             var collectionBeforePaging =
                 _context.Photographers.ApplySort(photographersResourceParameters.OrderBy,
                 _propertyMappingService.GetPropertyMapping<PhotographerDto, Photographer>());
+
             if (!string.IsNullOrEmpty(photographersResourceParameters.Genre))
             {
                 var genreForWhereClause = photographersResourceParameters.Genre

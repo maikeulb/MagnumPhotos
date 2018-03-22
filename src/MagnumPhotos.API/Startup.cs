@@ -1,180 +1,169 @@
 ﻿using AspNetCoreRateLimit;
 using FluentValidation.AspNetCore;
+using MagnumPhotos.API.Data.Context;
+using MagnumPhotos.API.Helpers;
+using MagnumPhotos.API.Services;
+using MagnumPhotos.API.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using MagnumPhotos.API.Services.Interfaces;
-using MagnumPhotos.API.Services;
-using MagnumPhotos.API.Entities;
-using MagnumPhotos.API.Helpers;
-using MagnumPhotos.API.Data.Seed;
-using MagnumPhotos.API.Data.Context;
 using Newtonsoft.Json.Serialization;
-using NLog.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Swashbuckle.AspNetCore;
 using Swashbuckle.AspNetCore.Swagger;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace MagnumPhotos.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup (IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
         public IConfiguration Configuration { get; }
 
-        public void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices (IServiceCollection services)
         {
-            services.AddMvc(setup =>
-                    {
-                    setup.ReturnHttpNotAcceptable = true;
-                    })
-            .AddJsonOptions(options =>
-                    {
-                    options.SerializerSettings.ContractResolver =
-                    new CamelCasePropertyNamesContractResolver();
-                    })
+            services.AddMvc (setup =>
+            {
+                setup.ReturnHttpNotAcceptable = true;
+            })
+            .AddJsonOptions (options =>
+            {
+                options.SerializerSettings.ContractResolver =
+                new CamelCasePropertyNamesContractResolver ();
+            })
             .AddFluentValidation (options => { options.RegisterValidatorsFromAssemblyContaining<Startup> (); });
 
-            services.AddResponseCaching();
+            services.AddResponseCaching ();
 
-            services.AddSwaggerGen(options =>
-                    {
-                    options.SwaggerDoc("v1", new Info { Title = "Magnum Photos API", Version = "v1" });
-                    });
+            services.AddSwaggerGen (options =>
+            {
+                options.SwaggerDoc ("v1", new Info { Title = "Magnum Photos API", Version = "v1" });
+            });
 
             services.AddDbContext<MagnumPhotosContext> (options =>
-                    options.UseNpgsql (Configuration.GetConnectionString ("MagnumPhotosApi")));
+                options.UseNpgsql (Configuration.GetConnectionString ("MagnumPhotosApi")));
 
-            services.AddScoped<IMagnumPhotosRepository, MagnumPhotosRepository>();
+            services.AddScoped<IMagnumPhotosRepository, MagnumPhotosRepository> ();
 
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor> ();
 
-            services.AddScoped<IUrlHelper>(implementationFactory =>
-                    {
-                    var actionContext = implementationFactory.GetService<IActionContextAccessor>()
+            services.AddScoped<IUrlHelper> (implementationFactory =>
+            {
+                var actionContext = implementationFactory.GetService<IActionContextAccessor> ()
                     .ActionContext;
-                    return new UrlHelper(actionContext);
-                    });
+                return new UrlHelper (actionContext);
+            });
 
-            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
+            services.AddTransient<IPropertyMappingService, PropertyMappingService> ();
 
-            services.AddHttpCacheHeaders(
-                    (expirationModelOptions) =>
+            services.AddHttpCacheHeaders (
+            (expirationModelOptions) =>
+            {
+                expirationModelOptions.MaxAge = 600;
+            },
+            (validationModelOptions) =>
+            {
+                validationModelOptions.AddMustRevalidate = true;
+            });
+
+            services.AddMemoryCache ();
+
+            services.Configure<IpRateLimitOptions> ((options) =>
+            {
+                options.GeneralRules = new System.Collections.Generic.List<RateLimitRule> ()
+                {
+                    new RateLimitRule ()
                     {
-                    expirationModelOptions.MaxAge = 600;
+                        Endpoint = "*",
+                        Limit = 1000,
+                        Period = "5m"
                     },
-                    (validationModelOptions) =>
+                    new RateLimitRule ()
                     {
-                    validationModelOptions.AddMustRevalidate = true;
-                    });
-
-            services.AddMemoryCache();
-
-            services.Configure<IpRateLimitOptions>((options) =>
-                    {
-                    options.GeneralRules = new System.Collections.Generic.List<RateLimitRule>()
-                    {
-                    new RateLimitRule()
-                    {
-                    Endpoint = "*",
-                    Limit = 1000,
-                    Period = "5m"
-                    },
-                    new RateLimitRule()
-                    {
-                    Endpoint = "*",
-                    Limit = 200,
-                    Period = "10s"
+                        Endpoint = "*",
+                        Limit = 200,
+                        Period = "10s"
                     }
-                    };
-                    });
+                };
+            });
 
-            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore> ();
 
-            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore> ();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,
+        public void Configure (IApplicationBuilder app, IHostingEnvironment env,
                 ILoggerFactory loggerFactory, MagnumPhotosContext magnumPhotosContext)
         {
-
-            if (env.IsDevelopment())
+            if (env.IsDevelopment ())
             {
-                app.UseDeveloperExceptionPage();
+                app.UseDeveloperExceptionPage ();
             }
             else
             {
-                app.UseExceptionHandler(appBuilder =>
+                app.UseExceptionHandler (appBuilder =>
+                {
+                    appBuilder.Run (async context =>
+                    {
+                        var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature> ();
+                        if (exceptionHandlerFeature != null)
                         {
-                        appBuilder.Run(async context =>
-                                {
-                                var exceptionHandlerFeature = context.Features.Get<IExceptionHandlerFeature>();
-                                if (exceptionHandlerFeature != null)
-                                {
-                                var logger = loggerFactory.CreateLogger("Global exception logger");
-                                logger.LogError(500,
-                                        exceptionHandlerFeature.Error,
-                                        exceptionHandlerFeature.Error.Message);
-                                }
-                                context.Response.StatusCode = 500;
-                                await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
-                                });
-                        });
+                            var logger = loggerFactory.CreateLogger ("Global exception logger");
+                            logger.LogError (500,
+                                exceptionHandlerFeature.Error,
+                                exceptionHandlerFeature.Error.Message);
+                        }
+                        context.Response.StatusCode = 500;
+                        await context.Response.WriteAsync ("An unexpected fault happened. Try again later.");
+                    });
+                });
             }
 
-            AutoMapper.Mapper.Initialize(options =>
-                    {
-                    options.CreateMap<Entities.Photographer, Models.PhotographerDto>()
-                    .ForMember(dest => dest.Name, opt => opt.MapFrom(src =>
+            AutoMapper.Mapper.Initialize (options =>
+            {
+                options.CreateMap<Entities.Photographer, Models.PhotographerDto> ()
+                        .ForMember (dest => dest.Name, opt => opt.MapFrom (src =>
                                 $"{src.FirstName} {src.LastName}"))
-                    .ForMember(dest => dest.Age, opt => opt.MapFrom(src =>
-                                src.DateOfBirth.GetCurrentAge()));
+                        .ForMember (dest => dest.Age, opt => opt.MapFrom (src =>
+                                src.DateOfBirth.GetCurrentAge ()));
 
-                    options.CreateMap<Entities.Book, Models.BookDto>();
+                options.CreateMap<Entities.Book, Models.BookDto> ();
 
-                    options.CreateMap<Models.PhotographerForCreationDto, Entities.Photographer>();
+                options.CreateMap<Models.PhotographerForCreationDto, Entities.Photographer> ();
 
-                    options.CreateMap<Models.BookForCreationDto, Entities.Book>();
+                options.CreateMap<Models.BookForCreationDto, Entities.Book> ();
 
-                    options.CreateMap<Models.BookForUpdateDto, Entities.Book>();
+                options.CreateMap<Models.BookForUpdateDto, Entities.Book> ();
 
-                    options.CreateMap<Entities.Book, Models.BookForUpdateDto>();
-                    });
+                options.CreateMap<Entities.Book, Models.BookForUpdateDto> ();
+            });
 
-            app.UseIpRateLimiting();
+            app.UseIpRateLimiting ();
 
-            app.UseResponseCaching();
+            app.UseResponseCaching ();
 
-            app.UseHttpCacheHeaders();
+            app.UseHttpCacheHeaders ();
 
-            app.UseMvc();
+            app.UseMvc ();
 
-            app.UseSwagger();
+            app.UseSwagger(c =>
+            {
+                c.RouteTemplate = "swagger/{documentName}/swagger.json";
+            });
 
-            app.UseSwaggerUI(c =>
-                    {
-                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Magnum Photos API V1");
-                    });
-
+            app.UseSwaggerUI (c =>
+            {
+                c.SwaggerEndpoint ("/swagger/v1/swagger.json", "Magnum Photos API V1");
+            });
         }
     }
 }

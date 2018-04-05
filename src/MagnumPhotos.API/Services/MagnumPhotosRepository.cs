@@ -68,14 +68,14 @@ namespace MagnumPhotos.API.Services
                 .ToList();
         }
 
-        public Book GetBookForPhotographer(Guid photographerId, Guid bookId)
+        public Book GetBook(Guid photographerId, Guid bookId)
         {
             return _context.Books
                 .Where(b => b.PhotographerId == photographerId && b.Id == bookId)
                 .FirstOrDefault();
         }
 
-        public IEnumerable<Book> GetBooksForPhotographer(Guid photographerId)
+        public IEnumerable<Book> GetBooks(Guid photographerId)
         {
             return _context.Books
                 .Where(b => b.PhotographerId == photographerId)
@@ -97,7 +97,7 @@ namespace MagnumPhotos.API.Services
             }
         }
 
-        public void AddBookForPhotographer(Guid photographerId, Book book)
+        public void AddBook(Guid photographerId, Book book)
         {
             var photographer = GetPhotographer(photographerId);
             if (photographer != null)

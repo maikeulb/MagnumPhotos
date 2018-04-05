@@ -30,44 +30,44 @@ namespace MagnumPhotos.API.Controllers
             _urlHelper = urlHelper;
         }
 
-        [HttpGet (Name = "GetBooksForPhotographer")]
-        public IActionResult GetBooksForPhotographer (Guid photographerId)
+        [HttpGet (Name = "GetBooks")]
+        public IActionResult GetBooks (Guid photographerId)
         {
             if (!_magnumPhotosRepository.PhotographerExists (photographerId))
                 return NotFound ();
 
-            var booksForPhotographerFromRepo = _magnumPhotosRepository.GetBooksForPhotographer (photographerId);
+            var booksFromRepo = _magnumPhotosRepository.GetBooks(photographerId);
 
-            var booksForPhotographer = Mapper.Map<IEnumerable<BookDto>> (booksForPhotographerFromRepo);
+            var books= Mapper.Map<IEnumerable<BookDto>> (booksFromRepo);
 
-            booksForPhotographer = booksForPhotographer.Select (book =>
+            books= books.Select (book =>
             {
                 book = CreateLinksForBook (book);
                 return book;
             });
 
-            var wrapper = new LinkedCollectionResourceWrapper<BookDto> (booksForPhotographer);
+            var wrapper = new LinkedCollectionResourceWrapper<BookDto> (books);
 
             return Ok (CreateLinksForBooks (wrapper));
         }
 
-        [HttpGet ("{id}", Name = "GetBookForPhotographer")]
-        public IActionResult GetBookForPhotographer (Guid photographerId, Guid id)
+        [HttpGet ("{id}", Name = "GetBook")]
+        public IActionResult GetBook (Guid photographerId, Guid id)
         {
             if (!_magnumPhotosRepository.PhotographerExists (photographerId))
                 return NotFound ();
 
-            var bookForPhotographerFromRepo = _magnumPhotosRepository.GetBookForPhotographer (photographerId, id);
+            var bookFromRepo = _magnumPhotosRepository.GetBook(photographerId, id);
 
-            if (bookForPhotographerFromRepo == null)
+            if (bookFromRepo == null)
                 return NotFound ();
 
-            var bookForPhotographer = Mapper.Map<BookDto> (bookForPhotographerFromRepo);
-            return Ok (CreateLinksForBook (bookForPhotographer));
+            var book= Mapper.Map<BookDto> (bookFromRepo);
+            return Ok (CreateLinksForBook (book));
         }
 
-        [HttpPost (Name = "CreateBookForPhotographer")]
-        public IActionResult CreateBookForPhotographer (Guid photographerId, [FromBody] BookForCreationDto book)
+        [HttpPost (Name = "CreateBook")]
+        public IActionResult CreateBook (Guid photographerId, [FromBody] BookForCreationDto book)
         {
             if (book == null)
                 return BadRequest ();
@@ -84,20 +84,20 @@ namespace MagnumPhotos.API.Controllers
 
             var bookEntity = Mapper.Map<Book> (book);
 
-            _magnumPhotosRepository.AddBookForPhotographer (photographerId, bookEntity);
+            _magnumPhotosRepository.AddBook(photographerId, bookEntity);
 
             if (!_magnumPhotosRepository.Save ())
                 throw new Exception ($"Creating a book for photographer {photographerId} failed on save.");
 
             var bookToReturn = Mapper.Map<BookDto> (bookEntity);
 
-            return CreatedAtRoute ("GetBookForPhotographer",
+            return CreatedAtRoute ("GetBook",
                 new { photographerId = photographerId, id = bookToReturn.Id },
                 CreateLinksForBook (bookToReturn));
         }
 
-        [HttpPut ("{id}", Name = "UpdateBookForPhotographer")]
-        public IActionResult UpdateBookForPhotographer (Guid photographerId, Guid id, [FromBody] BookForUpdateDto book)
+        [HttpPut ("{id}", Name = "UpdateBook")]
+        public IActionResult UpdateBookFor(Guid photographerId, Guid id, [FromBody] BookForUpdateDto book)
         {
             if (book == null)
                 return BadRequest ();
@@ -112,26 +112,26 @@ namespace MagnumPhotos.API.Controllers
             if (!_magnumPhotosRepository.PhotographerExists (photographerId))
                 return NotFound ();
 
-            var bookForPhotographerFromRepo = _magnumPhotosRepository.GetBookForPhotographer (photographerId, id);
+            var bookFromRepo = _magnumPhotosRepository.GetBook(photographerId, id);
 
-            if (bookForPhotographerFromRepo == null)
+            if (bookFromRepo == null)
             {
                 var bookToAdd = Mapper.Map<Book> (book);
                 bookToAdd.Id = id;
 
-                _magnumPhotosRepository.AddBookForPhotographer (photographerId, bookToAdd);
+                _magnumPhotosRepository.AddBook(photographerId, bookToAdd);
 
                 if (!_magnumPhotosRepository.Save ())
                     throw new Exception ($"Upserting book {id} for photographer {photographerId} failed on save.");
 
                 var bookToReturn = Mapper.Map<BookDto> (bookToAdd);
 
-                return CreatedAtRoute ("GetBookForPhotographer",
+                return CreatedAtRoute ("GetBook",
                     new { photographerId = photographerId, id = bookToReturn.Id },
                     bookToReturn);
             }
 
-            Mapper.Map (book, bookForPhotographerFromRepo);
+            Mapper.Map (book, bookFromRepo);
 
             if (!_magnumPhotosRepository.Save ())
                 throw new Exception ($"Updating book {id} for photographer {photographerId} failed on save.");
@@ -139,8 +139,8 @@ namespace MagnumPhotos.API.Controllers
             return NoContent ();
         }
 
-        [HttpPatch ("{id}", Name = "PartiallyUpdateBookForPhotographer")]
-        public IActionResult PartiallyUpdateBookForPhotographer (Guid photographerId, Guid id, [FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
+        [HttpPatch ("{id}", Name = "PartiallyUpdateBook")]
+        public IActionResult PartiallyUpdateBook (Guid photographerId, Guid id, [FromBody] JsonPatchDocument<BookForUpdateDto> patchDoc)
         {
             if (patchDoc == null)
                 return BadRequest ();
@@ -148,9 +148,9 @@ namespace MagnumPhotos.API.Controllers
             if (!_magnumPhotosRepository.PhotographerExists (photographerId))
                 return NotFound ();
 
-            var bookForPhotographerFromRepo = _magnumPhotosRepository.GetBookForPhotographer (photographerId, id);
+            var bookFromRepo = _magnumPhotosRepository.GetBook(photographerId, id);
 
-            if (bookForPhotographerFromRepo == null)
+            if (bookFromRepo == null)
             {
                 var bookDto = new BookForUpdateDto ();
                 patchDoc.ApplyTo (bookDto, ModelState);
@@ -167,18 +167,18 @@ namespace MagnumPhotos.API.Controllers
                 var bookToAdd = Mapper.Map<Book> (bookDto);
                 bookToAdd.Id = id;
 
-                _magnumPhotosRepository.AddBookForPhotographer (photographerId, bookToAdd);
+                _magnumPhotosRepository.AddBook(photographerId, bookToAdd);
 
                 if (!_magnumPhotosRepository.Save ())
                     throw new Exception ($"Upserting book {id} for photographer {photographerId} failed on save.");
 
                 var bookToReturn = Mapper.Map<BookDto> (bookToAdd);
-                return CreatedAtRoute ("GetBookForPhotographer",
+                return CreatedAtRoute ("GetBook",
                     new { photographerId = photographerId, id = bookToReturn.Id },
                     bookToReturn);
             }
 
-            var bookToPatch = Mapper.Map<BookForUpdateDto> (bookForPhotographerFromRepo);
+            var bookToPatch = Mapper.Map<BookForUpdateDto> (bookFromRepo);
 
             patchDoc.ApplyTo (bookToPatch, ModelState);
 
@@ -191,7 +191,7 @@ namespace MagnumPhotos.API.Controllers
             if (!ModelState.IsValid)
                 return new UnprocessableEntityObjectResult (ModelState);
 
-            Mapper.Map (bookToPatch, bookForPhotographerFromRepo);
+            Mapper.Map (bookToPatch, bookFromRepo);
 
             if (!_magnumPhotosRepository.Save ())
                 throw new Exception ($"Patching book {id} for photographer {photographerId} failed on save.");
@@ -199,17 +199,17 @@ namespace MagnumPhotos.API.Controllers
             return NoContent ();
         }
 
-        [HttpDelete ("{id}", Name = "DeleteBookForPhotographer")]
-        public IActionResult DeleteBookForPhotographer (Guid photographerId, Guid id)
+        [HttpDelete ("{id}", Name = "DeleteBook")]
+        public IActionResult DeleteBook(Guid photographerId, Guid id)
         {
             if (!_magnumPhotosRepository.PhotographerExists (photographerId))
                 return NotFound ();
 
-            var bookForPhotographerFromRepo = _magnumPhotosRepository.GetBookForPhotographer (photographerId, id);
-            if (bookForPhotographerFromRepo == null)
+            var bookFromRepo = _magnumPhotosRepository.GetBook(photographerId, id);
+            if (bookFromRepo == null)
                 return NotFound ();
 
-            _magnumPhotosRepository.DeleteBook (bookForPhotographerFromRepo);
+            _magnumPhotosRepository.DeleteBook (bookFromRepo);
 
             if (!_magnumPhotosRepository.Save ())
                 throw new Exception ($"Deleting book {id} for photographer {photographerId} failed on save.");
@@ -221,25 +221,25 @@ namespace MagnumPhotos.API.Controllers
 
         private BookDto CreateLinksForBook (BookDto book)
         {
-            book.Links.Add (new Link (_urlHelper.Link ("GetBookForPhotographer",
+            book.Links.Add (new Link (_urlHelper.Link ("GetBook",
                     new { id = book.Id }),
                 "self",
                 "GET"));
 
             book.Links.Add (
-                new Link (_urlHelper.Link ("DeleteBookForPhotographer",
+                new Link (_urlHelper.Link ("DeleteBook",
                         new { id = book.Id }),
                     "delete_book",
                     "DELETE"));
 
             book.Links.Add (
-                new Link (_urlHelper.Link ("UpdateBookForPhotographer",
+                new Link (_urlHelper.Link ("UpdateBook",
                         new { id = book.Id }),
                     "update_book",
                     "PUT"));
 
             book.Links.Add (
-                new Link (_urlHelper.Link ("PartiallyUpdateBookForPhotographer",
+                new Link (_urlHelper.Link ("PartiallyUpdateBook",
                         new { id = book.Id }),
                     "partially_update_book",
                     "PATCH"));
@@ -251,7 +251,7 @@ namespace MagnumPhotos.API.Controllers
             LinkedCollectionResourceWrapper<BookDto> booksWrapper)
         {
             booksWrapper.Links.Add (
-                new Link (_urlHelper.Link ("GetBooksForPhotographer", new { }),
+                new Link (_urlHelper.Link ("GetBooks", new { }),
                     "self",
                     "GET"));
 

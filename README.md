@@ -23,7 +23,7 @@ Endpoints
 | `PATCH`    | `/api/photographers/{pid}`                 | `Partially update photographer`                  |
 | `DELETE`   | `/api/photographers/{pid}`                 | `Delete photographer`                            |
 | `GET`      | `/api/photographers/{pid}/books`       | `Retrieve all photographer books`|
-| `GET`      | `/api/photographers/{pid}/books`       | `Retrieve photographer books`                 |
+| `GET`      | `/api/photographers/{pid}/books/{id}`       | `Retrieve photographer books`                 |
 | `POST`     | `/api/photographers/{pid}/books`       | `Create photographer books`                   |
 | `PUT`      | `/api/photographers/{pid}/books/{id}`  | `Update photographer books`                   |
 | `PATCH`    | `/api/photographers/{pid}/books/{id}`  | `Partially update photographer books`         |
@@ -113,9 +113,10 @@ docker-compose build
 docker-compose up
 Go to http://localhost:5000 and visit one of the above endpoints (or /swagger)
 ```
-Otherwise, edit `appsettings.json` so that the connection string points to your server.
 
-Then run:
+Otherwise you will need the .NET Core 2.0 SDK. If you have the SDK installed,
+then open `appsettings.json` and point the connection string to your server,
+then run:
 ```
 dotnet restore
 dotnet ef database update

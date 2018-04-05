@@ -5,6 +5,7 @@ using MagnumPhotos.API.Entities;
 using MagnumPhotos.API.Helpers;
 using MagnumPhotos.API.Models;
 using MagnumPhotos.API.Services.Interfaces;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -31,7 +32,6 @@ namespace MagnumPhotos.API.Controllers
         }
 
         [HttpGet (Name = "GetPhotographers")]
-        /* [HttpHead] */
         public IActionResult GetPhotographers (PhotographersResourceParameters photographersResourceParameters)
         {
             if (!_propertyMappingService.ValidMappingExistsFor<PhotographerDto, Photographer>
@@ -62,13 +62,12 @@ namespace MagnumPhotos.API.Controllers
 
             var photographers = Mapper.Map<IEnumerable<PhotographerDto>> (photographersFromRepo);
 
-            var wrapper = new LinkedCollectionResourceWrapperDto<PhotographerDto> (photographers);
+            var wrapper = new LinkedCollectionResourceWrapper<PhotographerDto> (photographers);
 
             return Ok (CreateLinksForPhotographers (wrapper));
         }
 
         [HttpGet ("{id}", Name = "GetPhotographer")]
-        /* [HttpHead] */
         public IActionResult GetPhotographer (Guid id)
         {
             var photographerFromRepo = _magnumPhotosRepository.GetPhotographer (id);
@@ -100,13 +99,95 @@ namespace MagnumPhotos.API.Controllers
                 photographerToReturn);
         }
 
-        [HttpPost ("{id}", Name = "BlockPhotographerCreation")]
-        public IActionResult BlockPhotographerCreation (Guid id)
+        [HttpPut ("{id}", Name = "UpdatePhotographer")]
+        public IActionResult UpdatePhotographer (Guid id, [FromBody] PhotographerForUpdateDto photographer)
         {
-            if (_magnumPhotosRepository.PhotographerExists (id))
-                return new StatusCodeResult (StatusCodes.Status409Conflict);
+            if (photographer == null)
+                return BadRequest ();
 
-            return NotFound ();
+            if (!ModelState.IsValid)
+                return new UnprocessableEntityObjectResult (ModelState);
+
+            if (!_magnumPhotosRepository.PhotographerExists (id))
+                return NotFound ();
+
+            var photographerFromRepo = _magnumPhotosRepository.GetPhotographer (id);
+
+            if (photographerFromRepo == null)
+            {
+                var photographerToAdd = Mapper.Map<Photographer> (photographer);
+                photographerToAdd.Id = id;
+
+                _magnumPhotosRepository.AddPhotographer (photographerToAdd);
+
+                if (!_magnumPhotosRepository.Save ())
+                    throw new Exception ($"Upserting photographer {id} failed on save.");
+
+                var photographerToReturn = Mapper.Map<Photographer> (photographerToAdd);
+
+                return CreatedAtRoute ("GetPhotographer",
+                    new { id = photographerToReturn.Id },
+                    photographerToReturn);
+            }
+
+            Mapper.Map (photographer, photographerFromRepo);
+
+            if (!_magnumPhotosRepository.Save ())
+                throw new Exception ($"Updating photographer {id} failed on save.");
+
+            return NoContent ();
+        }
+
+        [HttpPatch ("{id}", Name = "PartiallyUpdatePhotographer")]
+        public IActionResult PartiallyUpdatePhotographer (Guid id, [FromBody] JsonPatchDocument<PhotographerForUpdateDto> patchDoc)
+        {
+            if (patchDoc == null)
+                return BadRequest ();
+
+            if (!_magnumPhotosRepository.PhotographerExists (id))
+                return NotFound ();
+
+            var photographerFromRepo = _magnumPhotosRepository.GetPhotographer (id);
+
+            if (photographerFromRepo == null)
+            {
+                var photographerDto = new PhotographerForUpdateDto ();
+                patchDoc.ApplyTo (photographerDto, ModelState);
+
+                TryValidateModel (photographerDto);
+
+                if (!ModelState.IsValid)
+                    return new UnprocessableEntityObjectResult (ModelState);
+
+                var photographerToAdd = Mapper.Map<Photographer> (photographerDto);
+                photographerToAdd.Id = id;
+
+                _magnumPhotosRepository.AddPhotographer (photographerToAdd);
+
+                if (!_magnumPhotosRepository.Save ())
+                    throw new Exception ($"Upserting photographer {id} failed on save.");
+
+                var photographerToReturn = Mapper.Map<Photographer> (photographerToAdd);
+                return CreatedAtRoute ("GetPhotographer",
+                    new { id = photographerToReturn.Id },
+                    photographerToReturn);
+            }
+
+            var photographerToPatch = Mapper.Map<PhotographerForUpdateDto> (photographerFromRepo);
+
+            patchDoc.ApplyTo (photographerToPatch, ModelState);
+
+            TryValidateModel (photographerToPatch);
+
+            if (!ModelState.IsValid)
+                return new UnprocessableEntityObjectResult (ModelState);
+
+            Mapper.Map (photographerToPatch, photographerFromRepo);
+
+            if (!_magnumPhotosRepository.Save ())
+                throw new Exception ($"Patching photographer {id} failed on save.");
+
+            return NoContent ();
         }
 
         [HttpDelete ("{id}", Name = "DeletePhotographer")]
@@ -125,22 +206,15 @@ namespace MagnumPhotos.API.Controllers
             return NoContent ();
         }
 
-        [HttpOptions]
-        public IActionResult GetPhotographersOptions ()
-        {
-            Response.Headers.Add ("Allow", "GET,OPTIONS,POST,DELETE");
-            return Ok ();
-        }
-
         private PhotographerDto CreateLinksForPhotographer (PhotographerDto photographer)
         {
-            photographer.Links.Add (new LinkDto (_urlHelper.Link ("GetPhotographer",
+            photographer.Links.Add (new Link (_urlHelper.Link ("GetPhotographer",
                     new { id = photographer.Id }),
                 "self",
                 "GET"));
 
             photographer.Links.Add (
-                new LinkDto (_urlHelper.Link ("DeletePhotographer",
+                new Link (_urlHelper.Link ("DeletePhotographer",
                         new { id = photographer.Id }),
                     "delete_photographer",
                     "DELETE"));
@@ -148,11 +222,11 @@ namespace MagnumPhotos.API.Controllers
             return photographer;
         }
 
-        private LinkedCollectionResourceWrapperDto<PhotographerDto> CreateLinksForPhotographers (
-            LinkedCollectionResourceWrapperDto<PhotographerDto> photographersWrapper)
+        private LinkedCollectionResourceWrapper<PhotographerDto> CreateLinksForPhotographers (
+            LinkedCollectionResourceWrapper<PhotographerDto> photographersWrapper)
         {
             photographersWrapper.Links.Add (
-                new LinkDto (_urlHelper.Link ("GetPhotographer", new { }),
+                new Link (_urlHelper.Link ("GetPhotographer", new { }),
                     "self",
                     "GET"));
 

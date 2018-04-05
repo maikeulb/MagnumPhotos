@@ -135,16 +135,13 @@ namespace MagnumPhotos.API
                                 $"{src.FirstName} {src.LastName}"))
                         .ForMember (dest => dest.Age, opt => opt.MapFrom (src =>
                                 src.DateOfBirth.GetCurrentAge ()));
-
                 options.CreateMap<Entities.Book, Models.BookDto> ();
-
-                options.CreateMap<Models.PhotographerForCreationDto, Entities.Photographer> ();
-
-                options.CreateMap<Models.BookForCreationDto, Entities.Book> ();
-
-                options.CreateMap<Models.BookForUpdateDto, Entities.Book> ();
-
                 options.CreateMap<Entities.Book, Models.BookForUpdateDto> ();
+                options.CreateMap<Entities.Photographer, Models.PhotographerForUpdateDto> ();
+                options.CreateMap<Models.PhotographerForCreationDto, Entities.Photographer> ();
+                options.CreateMap<Models.PhotographerForUpdateDto, Entities.Photographer> ();
+                options.CreateMap<Models.BookForCreationDto, Entities.Book> ();
+                options.CreateMap<Models.BookForUpdateDto, Entities.Book> ();
             });
 
             app.UseIpRateLimiting ();

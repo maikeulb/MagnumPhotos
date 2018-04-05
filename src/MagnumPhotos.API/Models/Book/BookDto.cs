@@ -2,7 +2,7 @@ using System;
 
 namespace MagnumPhotos.API.Models
 {
-    public class BookDto : LinkedResourceBaseDto
+    public class BookDto : LinkedResourceBase
     {
         public Guid Id { get; set; }
         public Guid PhotographerId { get; set; }

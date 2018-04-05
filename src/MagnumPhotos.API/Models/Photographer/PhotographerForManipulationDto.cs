@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MagnumPhotos.API.Models
 {
-    public class PhotographerForCreationDto
+    public abstract class PhotographerForManipulationDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

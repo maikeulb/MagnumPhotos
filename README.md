@@ -16,20 +16,22 @@ Endpoints
 
 | Method     | URI                                   | Action                                      |
 |------------|---------------------------------------|---------------------------------------------|
-| `GET`      | `/api/photographers`                       | `Retrieve all photographers`<sub>1</sub>         |
+| `GET`      | `/api/photographers`                       | `Retrieve all photographers`<sup>1</sup>         |
 | `GET`      | `/api/photographers/{pid}`                 | `Retrieve photographer`                          |
 | `POST`     | `/api/photographers`                       | `Create photographer`                            |
-| `PUT`      | `/api/photographers/{pid}`                 | `Update photographer`                            |
-| `PATCH`    | `/api/photographers/{pid}`                 | `Partially update photographer`                  |
+| `PUT`      | `/api/photographers/{pid}`                 | `Update photographer`<sup>2</sup>                            |
+| `PATCH`    | `/api/photographers/{pid}`                 | `Partially update photographer`<sup>3</sup>                  |
 | `DELETE`   | `/api/photographers/{pid}`                 | `Delete photographer`                            |
 | `GET`      | `/api/photographers/{pid}/books`       | `Retrieve all photographer books`|
 | `GET`      | `/api/photographers/{pid}/books/{id}`       | `Retrieve photographer books`                 |
 | `POST`     | `/api/photographers/{pid}/books`       | `Create photographer books`                   |
-| `PUT`      | `/api/photographers/{pid}/books/{id}`  | `Update photographer books`                   |
-| `PATCH`    | `/api/photographers/{pid}/books/{id}`  | `Partially update photographer books`         |
+| `PUT`      | `/api/photographers/{pid}/books/{id}`  | `Update photographer books`<sup>2</sup>                   |
+| `PATCH`    | `/api/photographers/{pid}/books/{id}`  | `Partially update photographer books`<sup>3</sup>         |
 | `DELETE`   | `/api/photographers/{pid}/books/{id}`  | `Delete photographer's books`                 |
 
 1. Optional query parameters: genre, searchQuery, orderBy
+2. Supports upserts
+3. Implemented with JSON Patch Documents
 
 Sample Responses
 ---------------

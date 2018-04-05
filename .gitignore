@@ -279,3 +279,4 @@ __pycache__/
 __OmniSharpScratch__
 .envc
 .vscode
+.envrc

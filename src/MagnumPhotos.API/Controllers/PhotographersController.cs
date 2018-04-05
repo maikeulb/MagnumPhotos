@@ -37,6 +37,7 @@ namespace MagnumPhotos.API.Controllers
             if (!_propertyMappingService.ValidMappingExistsFor<PhotographerDto, Photographer>
                 (photographersResourceParameters.OrderBy))
                 return BadRequest ();
+
             var photographersFromRepo = _magnumPhotosRepository.GetPhotographers (photographersResourceParameters);
 
             var previousPageLink = photographersFromRepo.HasPrevious ?

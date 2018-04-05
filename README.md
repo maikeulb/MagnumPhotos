@@ -2,9 +2,8 @@
 
 Restful API for [Magnum Photo Agency](https://www.magnumphotos.com/)
 (unofficial). The resources are the agency photographers and their photography
-books. Additional features include hypermedia links, pagination,
-search/filter/order, rate-limiting, cache headers, file logging (NLog), and
-swagger. 
+books. Features include hypermedia links, pagination, search/filter/order,
+rate-limiting, cache headers, file logging (NLog), and swagger. 
 
 Technology
 ----------
@@ -14,22 +13,22 @@ Technology
 Endpoints
 ---------
 
-| Method     | URI                                   | Action                                      |
-|------------|---------------------------------------|---------------------------------------------|
-| `GET`      | `/api/photographers`                       | `Retrieve all photographers`<sup>1</sup>         |
-| `GET`      | `/api/photographers/{pid}`                 | `Retrieve photographer`                          |
-| `POST`     | `/api/photographers`                       | `Create photographer`                            |
-| `PUT`      | `/api/photographers/{pid}`                 | `Update photographer`<sup>2</sup>                            |
-| `PATCH`    | `/api/photographers/{pid}`                 | `Partially update photographer`<sup>3</sup>                  |
-| `DELETE`   | `/api/photographers/{pid}`                 | `Delete photographer`                            |
-| `GET`      | `/api/photographers/{pid}/books`       | `Retrieve all photographer books`|
-| `GET`      | `/api/photographers/{pid}/books/{id}`       | `Retrieve photographer books`                 |
-| `POST`     | `/api/photographers/{pid}/books`       | `Create photographer books`                   |
-| `PUT`      | `/api/photographers/{pid}/books/{id}`  | `Update photographer books`<sup>2</sup>                   |
-| `PATCH`    | `/api/photographers/{pid}/books/{id}`  | `Partially update photographer books`<sup>3</sup>         |
-| `DELETE`   | `/api/photographers/{pid}/books/{id}`  | `Delete photographer's books`                 |
+| Method     | URI                                    | Action                                       |
+|------------|----------------------------------------|----------------------------------------------|
+| `GET`      | `/api/photographers`                   | `Retrieve all photographers`<sup>1</sup>     |
+| `GET`      | `/api/photographers/{pid}`             | `Retrieve photographer`                      |
+| `POST`     | `/api/photographers`                   | `Create photographer`                        |
+| `PUT`      | `/api/photographers/{pid}`             | `Update photographer`<sup>2</sup>            |
+| `PATCH`    | `/api/photographers/{pid}`             | `Partially update photographer`<sup>3</sup>  |
+| `DELETE`   | `/api/photographers/{pid}`             | `Delete photographer`                        |
+| `GET`      | `/api/photographers/{pid}/books`       | `Retrieve all photographer books`            |
+| `GET`      | `/api/photographers/{pid}/books/{id}`  | `Retrieve photographer books`                |
+| `POST`     | `/api/photographers/{pid}/books`       | `Create photographer books`                  |
+| `PUT`      | `/api/photographers/{pid}/books/{id}`  | `Update photographer books`<sup>2</sup>      |
+| `PATCH`    | `/api/photographers/{pid}/books/{id}`  | `Partially update photographer books`<sup>3</sup> |
+| `DELETE`   | `/api/photographers/{pid}/books/{id}`  | `Delete photographer's books`                |
 
-1. Optional query parameters: genre, searchQuery, orderBy
+1. Optional query parameters: `genre`, `searchQuery`, `orderBy`
 2. Supports upserts
 3. Implemented with JSON Patch Documents
 
@@ -123,5 +122,5 @@ then run:
 dotnet restore
 dotnet ef database update
 dotnet run
-Go to http://localhost:5000 and visit one of the above endpoints
+Go to http://localhost:5000 and visit one of the above endpoints (or /swagger)
 ```

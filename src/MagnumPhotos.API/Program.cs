@@ -3,6 +3,7 @@ using MagnumPhotos.API.Data.Context;
 using MagnumPhotos.API.Data.Seed;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NLog.Web;

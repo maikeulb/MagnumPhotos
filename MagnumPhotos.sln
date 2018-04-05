@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagnumPhotos", "src\MagnumPHotos.API\MagnumPhotos.csproj", "{6E63F26E-1DA5-4949-820E-49E562867DB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagnumPhotos", "src\MagnumPhotos.API\MagnumPhotos.csproj", "{6E63F26E-1DA5-4949-820E-49E562867DB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

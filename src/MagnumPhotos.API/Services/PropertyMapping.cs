@@ -11,5 +11,4 @@ namespace MagnumPhotos.API.Services
             _mappingDictionary = mappingDictionary;
         }
     }
-
 }

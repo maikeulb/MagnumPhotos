@@ -21,16 +21,16 @@ namespace MagnumPhotos.API.Services
             propertyMappings.Add (new PropertyMapping<PhotographerDto, Photographer> (_photographerPropertyMapping));
         }
         public Dictionary<string, PropertyMappingValue> GetPropertyMapping<TSource, TDestination> ()
+        {
+            var matchingMapping = propertyMappings.OfType<PropertyMapping<TSource, TDestination>> ();
+
+            if (matchingMapping.Count () == 1)
             {
-                var matchingMapping = propertyMappings.OfType<PropertyMapping<TSource, TDestination>> ();
-
-                if (matchingMapping.Count () == 1)
-                {
-                    return matchingMapping.First ()._mappingDictionary;
-                }
-
-                throw new Exception ($"Cannot find exact property mapping instance for <{typeof(TSource)},{typeof(TDestination)}");
+                return matchingMapping.First ()._mappingDictionary;
             }
+
+            throw new Exception ($"Cannot find exact property mapping instance for <{typeof(TSource)},{typeof(TDestination)}");
+        }
 
         public bool ValidMappingExistsFor<TSource, TDestination> (string fields)
         {
@@ -59,6 +59,5 @@ namespace MagnumPhotos.API.Services
             return true;
 
         }
-
     }
 }

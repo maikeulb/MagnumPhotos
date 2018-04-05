@@ -32,15 +32,15 @@ namespace MagnumPhotos.API
         public void ConfigureServices (IServiceCollection services)
         {
             services.AddMvc (setup =>
-            {
-                setup.ReturnHttpNotAcceptable = true;
-            })
-            .AddJsonOptions (options =>
-            {
-                options.SerializerSettings.ContractResolver =
-                new CamelCasePropertyNamesContractResolver ();
-            })
-            .AddFluentValidation (options => { options.RegisterValidatorsFromAssemblyContaining<Startup> (); });
+                {
+                    setup.ReturnHttpNotAcceptable = true;
+                })
+                .AddJsonOptions (options =>
+                {
+                    options.SerializerSettings.ContractResolver =
+                        new CamelCasePropertyNamesContractResolver ();
+                })
+                .AddFluentValidation (options => { options.RegisterValidatorsFromAssemblyContaining<Startup> (); });
 
             services.AddResponseCaching ();
 
@@ -66,14 +66,14 @@ namespace MagnumPhotos.API
             services.AddTransient<IPropertyMappingService, PropertyMappingService> ();
 
             services.AddHttpCacheHeaders (
-            (expirationModelOptions) =>
-            {
-                expirationModelOptions.MaxAge = 600;
-            },
-            (validationModelOptions) =>
-            {
-                validationModelOptions.AddMustRevalidate = true;
-            });
+                (expirationModelOptions) =>
+                {
+                    expirationModelOptions.MaxAge = 600;
+                },
+                (validationModelOptions) =>
+                {
+                    validationModelOptions.AddMustRevalidate = true;
+                });
 
             services.AddMemoryCache ();
 
@@ -81,18 +81,18 @@ namespace MagnumPhotos.API
             {
                 options.GeneralRules = new System.Collections.Generic.List<RateLimitRule> ()
                 {
-                    new RateLimitRule ()
-                    {
-                        Endpoint = "*",
-                        Limit = 1000,
-                        Period = "5m"
-                    },
-                    new RateLimitRule ()
-                    {
-                        Endpoint = "*",
-                        Limit = 200,
-                        Period = "10s"
-                    }
+                new RateLimitRule ()
+                {
+                Endpoint = "*",
+                Limit = 1000,
+                Period = "5m"
+                },
+                new RateLimitRule ()
+                {
+                Endpoint = "*",
+                Limit = 200,
+                Period = "10s"
+                }
                 };
             });
 
@@ -102,7 +102,7 @@ namespace MagnumPhotos.API
         }
 
         public void Configure (IApplicationBuilder app, IHostingEnvironment env,
-                ILoggerFactory loggerFactory, MagnumPhotosContext magnumPhotosContext)
+            ILoggerFactory loggerFactory, MagnumPhotosContext magnumPhotosContext)
         {
             if (env.IsDevelopment ())
             {
@@ -131,10 +131,10 @@ namespace MagnumPhotos.API
             AutoMapper.Mapper.Initialize (options =>
             {
                 options.CreateMap<Entities.Photographer, Models.PhotographerDto> ()
-                        .ForMember (dest => dest.Name, opt => opt.MapFrom (src =>
-                                $"{src.FirstName} {src.LastName}"))
-                        .ForMember (dest => dest.Age, opt => opt.MapFrom (src =>
-                                src.DateOfBirth.GetCurrentAge ()));
+                    .ForMember (dest => dest.Name, opt => opt.MapFrom (src =>
+                        $"{src.FirstName} {src.LastName}"))
+                    .ForMember (dest => dest.Age, opt => opt.MapFrom (src =>
+                        src.DateOfBirth.GetCurrentAge ()));
                 options.CreateMap<Entities.Book, Models.BookDto> ();
                 options.CreateMap<Entities.Book, Models.BookForUpdateDto> ();
                 options.CreateMap<Entities.Photographer, Models.PhotographerForUpdateDto> ();
@@ -152,7 +152,7 @@ namespace MagnumPhotos.API
 
             app.UseMvc ();
 
-            app.UseSwagger(c =>
+            app.UseSwagger (c =>
             {
                 c.RouteTemplate = "swagger/{documentName}/swagger.json";
             });

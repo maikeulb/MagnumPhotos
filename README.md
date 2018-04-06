@@ -7,8 +7,13 @@ rate-limiting, cache headers, file logging (NLog), and swagger.
 
 Technology
 ----------
-* ASP.NET Core
-* PostgreSQL (with Entity Framework)
+* ASP.NET Core 2.0
+* PostgreSQL
+* Entity Framework Core 2.0 
+* AutoMapper
+* FluentValidation
+* NLog
+* Swashbuckle
 
 Endpoints
 ---------
@@ -115,7 +120,7 @@ docker-compose up
 Go to http://localhost:5000 and visit one of the above endpoints (or /swagger)
 ```
 
-Otherwise you will need the .NET Core 2.0 SDK. If you have the SDK installed,
+Alternatively, you will need the .NET Core 2.0 SDK. If you have the SDK installed,
 then open `appsettings.json` and point the connection string to your server,
 then run:
 ```

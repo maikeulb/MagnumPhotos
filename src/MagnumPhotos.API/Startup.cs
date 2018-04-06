@@ -81,18 +81,18 @@ namespace MagnumPhotos.API
             {
                 options.GeneralRules = new System.Collections.Generic.List<RateLimitRule> ()
                 {
-                new RateLimitRule ()
-                {
-                Endpoint = "*",
-                Limit = 1000,
-                Period = "5m"
-                },
-                new RateLimitRule ()
-                {
-                Endpoint = "*",
-                Limit = 200,
-                Period = "10s"
-                }
+                    new RateLimitRule ()
+                    {
+                        Endpoint = "*",
+                        Limit = 1000,
+                        Period = "5m"
+                    },
+                    new RateLimitRule ()
+                    {
+                        Endpoint = "*",
+                        Limit = 200,
+                        Period = "10s"
+                    }
                 };
             });
 
